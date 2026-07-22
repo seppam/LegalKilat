@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Legalitas & Pedoman KUR - EksporMudah x SewaBantu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+
+    <!-- ─── HEADER ─── -->
+    <header class="bg-white border-b border-slate-100 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-600 text-white p-2 rounded-lg font-bold text-lg tracking-wider">EMxSB</div>
+                <div>
+                    <h1 class="text-sm sm:text-base font-bold text-slate-900 leading-tight">EksporMudah x SewaBantu</h1>
+                    <p class="text-xs text-slate-500">Legal Knowledge Base & Proposal Assistant</p>
+                </div>
+            </div>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Data Valid 2026</span>
+        </div>
+    </header>
+
+    <!-- ─── MAIN ─── -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+
+        <!-- Welcome Banner -->
+        <div class="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-2xl p-6 sm:p-8 text-white mb-8 shadow-md">
+            <h2 class="text-xl sm:text-3xl font-extrabold mb-2">Pusat Data Regulasi & Legalitas UMKM</h2>
+            <p class="text-slate-200 text-sm sm:text-base max-w-2xl mb-4">
+                Basis data terkurasi sebagai acuan penyusunan proposal modal KUR, klasifikasi kode HS Bea Cukai, serta panduan pengisian dokumen ekspor resmi.
+            </p>
+            <div class="text-xs text-indigo-200 border-t border-indigo-600/50 pt-4 flex flex-wrap gap-x-6 gap-y-2">
+                <span><strong>Sumber Resmi:</strong> kur.ekon.go.id, insw.go.id, DJBC, Kemendag RI</span>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="border-b border-slate-200 mb-8">
+            <nav class="flex space-x-8 overflow-x-auto" aria-label="Tabs">
+                <button onclick="switchTab('tab-ekspor')" id="btn-tab-ekspor"
+                    class="tab-btn border-blue-600 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all flex items-center space-x-2">
+                    <span>📦 Regulasi Ekspor & BTKI</span>
+                </button>
+                <button onclick="switchTab('tab-kur')" id="btn-tab-kur"
+                    class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all flex items-center space-x-2">
+                    <span>🏦 Pedoman KUR & Bank Penyalur</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             TAB 1: REGULASI EKSPOR & BTKI
+        ═══════════════════════════════════════ -->
+        <div id="tab-ekspor" class="tab-content block transition-opacity duration-300">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Sidebar -->
+                <div class="space-y-6 lg:col-span-1">
+                    <!-- 4-Step Export Guide -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                        <h3 class="font-bold text-slate-950 text-base mb-4 flex items-center space-x-2">
+                            <span class="p-1.5 bg-blue-50 text-blue-600 rounded-lg">📋</span>
+                            <span>Langkah Ekspor Mandiri</span>
+                        </h3>
+                        <ol class="space-y-4 text-xs sm:text-sm text-slate-600">
+                            <li class="flex space-x-3">
+                                <span class="font-bold text-blue-600 bg-blue-50 h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0 text-xs">1</span>
+                                <span>Miliki <strong>NIB aktif</strong> gratis melalui <a href="https://oss.go.id" target="_blank" class="text-blue-600 underline">oss.go.id</a>.</span>
+                            </li>
+                            <li class="flex space-x-3">
+                                <span class="font-bold text-blue-600 bg-blue-50 h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0 text-xs">2</span>
+                                <span>Pastikan <strong>KBLI</strong> pada NIB sesuai dengan produk ekspor Anda.</span>
+                            </li>
+                            <li class="flex space-x-3">
+                                <span class="font-bold text-blue-600 bg-blue-50 h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0 text-xs">3</span>
+                                <span>Input data <strong>PEB</strong> di portal <a href="https://insw.go.id" target="_blank" class="text-blue-600 underline">insw.go.id</a>.</span>
+                            </li>
+                            <li class="flex space-x-3">
+                                <span class="font-bold text-blue-600 bg-blue-50 h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0 text-xs">4</span>
+                                <span>Unduh <strong>Nota Persetujuan Ekspor (NPE)</strong> setelah disetujui Bea Cukai.</span>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <!-- KBLI Reference -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                        <h3 class="font-bold text-slate-950 text-base mb-3">Referensi KBLI Utama</h3>
+                        <div class="space-y-3">
+                            <div class="border-l-2 border-amber-500 pl-3">
+                                <span class="text-xs font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">KBLI 01240</span>
+                                <p class="text-xs text-slate-600 mt-1">Produksi Kopi dan Teh (Green Bean & Olahan)</p>
+                            </div>
+                            <div class="border-l-2 border-indigo-500 pl-3">
+                                <span class="text-xs font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">KBLI 14111</span>
+                                <p class="text-xs text-slate-600 mt-1">Industri Pakaian Jadi Konveksi (Batik)</p>
+                            </div>
+                            <div class="border-l-2 border-emerald-500 pl-3">
+                                <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">KBLI 16294</span>
+                                <p class="text-xs text-slate-600 mt-1">Industri Kerajinan Kayu, Bambu & Rotan</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Incoterms Quick Reference -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                        <h3 class="font-bold text-slate-950 text-base mb-3">Referensi Incoterms 2020</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-xs text-slate-600">
+                                <thead class="bg-slate-50 text-slate-700 font-medium">
+                                    <tr>
+                                        <th class="py-2 px-3 text-left">Incoterm</th>
+                                        <th class="py-2 px-3 text-left">Penggunaan</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr><td class="py-2 px-3 font-semibold text-blue-600">FOB</td><td class="py-2 px-3">Coffee, bulk commodities</td></tr>
+                                    <tr><td class="py-2 px-3 font-semibold text-blue-600">CIF</td><td class="py-2 px-3">Batik, handicrafts (with insurance)</td></tr>
+                                    <tr><td class="py-2 px-3 font-semibold text-blue-600">CFR</td><td class="py-2 px-3">General cargo</td></tr>
+                                    <tr><td class="py-2 px-3 font-semibold text-blue-600">EXW</td><td class="py-2 px-3">Exporter's premises</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="lg:col-span-2 space-y-6">
+
+                    <!-- BTKI HS Code Catalog -->
+                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                        <div class="bg-slate-100/50 px-6 py-4 border-b border-slate-200 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                            <h3 class="font-bold text-slate-900 text-base sm:text-lg">Katalog Kode HS 8-Digit (BTKI 2022)</h3>
+                            <span class="text-xs bg-slate-200 text-slate-700 px-2 py-1 rounded font-semibold whitespace-nowrap">Klasifikasi Bea Cukai</span>
+                        </div>
+                        <div class="p-6 space-y-8">
+
+                            <!-- Kopi -->
+                            <div class="space-y-3">
+                                <h4 class="font-bold text-amber-800 border-b border-amber-100 pb-1 text-sm sm:text-base">☕ Komoditas Kopi (Chapter 09)</h4>
+                                <div class="overflow-x-auto rounded-lg border border-slate-100">
+                                    <table class="min-w-full text-xs text-left text-slate-600">
+                                        <thead class="bg-amber-50 text-amber-800 font-semibold">
+                                            <tr>
+                                                <th class="py-2 px-3">Kode HS 8-Digit</th>
+                                                <th class="py-2 px-3">Deskripsi Resmi Kepabeanan</th>
+                                                <th class="py-2 px-3">Bea Keluar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-slate-100">
+                                            <tr>
+                                                <td class="py-3 px-3 font-semibold text-blue-600">0901.11.10</td>
+                                                <td class="py-3 px-3">Kopi, belum disangrai: Bukan arabika dan bukan robusta (Green Beans)</td>
+                                                <td class="py-3 px-3">0% (raw, unprocessed)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-3 font-semibold text-blue-600">0901.11.20</td>
+                                                <td class="py-3 px-3">Kopi mentah jenis lainnya (kupasan kulit, penyortiran khusus)</td>
+                                                <td class="py-3 px-3">0%</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-3 font-semibold text-blue-600">2101.11.10</td>
+                                                <td class="py-3 px-3">Kopi Instan (Kopi olahan siap seduh)</td>
+                                                <td class="py-3 px-3">10%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="text-xs text-slate-500 italic">* Bea keluar kopi olahan (instant) berdasarkan PMK berlaku. Kopi green bean tidak dikenakan bea keluar.</p>
+                            </div>
+
+                            <!-- Batik -->
+                            <div class="space-y-3">
+                                <h4 class="font-bold text-indigo-800 border-b border-indigo-100 pb-1 text-sm sm:text-base">🥻 Komoditas Tekstil & Batik (Chapter 62 & 63)</h4>
+                                <div class="overflow-x-auto rounded-lg border border-slate-100">
+                                    <table class="min-w-full text-xs text-left text-slate-600">
+                                        <thead class="bg-indigo-50 text-indigo-800 font-semibold">
+                                            <tr>
+                                                <th class="py-2 px-3">Kode HS 8-Digit</th>
+                                                <th class="py-2 px-3">Deskripsi Resmi Kepabeanan</th>
+                                                <th class="py-2 px-3">FTA / MFN</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-slate-100">
+                                            <tr>
+                                                <td class="py-3 px-3 font-semibold text-blue-600">6204.42.10.00</td>
+                                                <td class="py-3 px-3">Pakaian wanita/gadis dari katun: Diresapi atau dilapisi kain batik</td>
+                                                <td class="py-3 px-3">MFN 25%</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-3 font-semibold text-blue-600">5208.51.10.00</td>
+                                                <td class="py-3 px-3">Kain katun: Dilapisi/diresapi motif batik tradisional (tenun polos)</td>
+                                                <td class="py-3 px-3">MFN 20%</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-3 font-semibold text-blue-600">5007.10.10.00</td>
+                                                <td class="py-3 px-3">Kain sutra bermotif atau dilapisi lilin batik tulis/cap</td>
+                                                <td class="py-3 px-3">MFN 15%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="text-xs text-slate-500 italic">* Manfaatkan FTA (ASEAN-Australia-NZ, ACICTA, dll.) untuk pengurangan atau pembebasan bea masuk di negara tujuan.</p>
+                            </div>
+
+                            <!-- Kerajinan Tangan -->
+                            <div class="space-y-3">
+                                <h4 class="font-bold text-emerald-800 border-b border-emerald-100 pb-1 text-sm sm:text-base">🎨 Komoditas Kerajinan Tangan (Handicraft)</h4>
+                                <div class="overflow-x-auto rounded-lg border border-slate-100">
+                                    <table class="min-w-full text-xs text-left text-slate-600">
+                                        <thead class="bg-emerald-50 text-emerald-800 font-semibold">
+                                            <tr>
+                                                <th class="py-2 px-3">Kode HS 8-Digit</th>
+                                                <th class="py-2 px-3">Deskripsi Resmi Kepabeanan</th>
+                                                <th class="py-2 px-3">Catatan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-slate-100">
+                                            <tr>
+                                                <td class="py-3 px-3 font-semibold text-blue-600">4420.10.00.00</td>
+                                                <td class="py-3 px-3">Patung kayu, ornamen, atau hiasan dekorasi dari kayu</td>
+                                                <td class="py-3 px-3">Tanpa batu permata</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-3 font-semibold text-blue-600">4601.21.00.00</td>
+                                                <td class="py-3 px-3">Tas, anyaman, atau dekorasi yang terbuat dari bahan rotan</td>
+                                                <td class="py-3 px-3">Anyaman rotan</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-3 font-semibold text-blue-600">7113.11.10.00</td>
+                                                <td class="py-3 px-3">Perhiasan perak tradisional (tanpa hiasan batu permata)</td>
+                                                <td class="py-3 px-3">Perhiasan perak</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- PEB Document Guide -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-900 text-base sm:text-lg border-b border-slate-100 pb-2">📂 Panduan Pemberitahuan Ekspor Barang (PEB)</h3>
+                        <p class="text-sm text-slate-600">
+                            PEB adalah laporan wajib kepada Bea Cukai. Dokumen diinput melalui portal <a href="https://insw.go.id" target="_blank" class="text-blue-600 underline font-medium">insw.go.id</a>. Siapkan file pendukung berikut:
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-blue-600 uppercase tracking-wider block mb-1">01. Invoice Komersial</span>
+                                <p class="text-xs text-slate-500">Harga barang dalam USD/EUR + tipe Incoterms. Dikeluarkan oleh eksportir.</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-blue-600 uppercase tracking-wider block mb-1">02. Packing List</span>
+                                <p class="text-xs text-slate-500">Rincian muatan fisik, berat kotor (gross weight), berat bersih (net weight), jumlah boks/koli.</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-blue-600 uppercase tracking-wider block mb-1">03. COO / Surat Asal Usul</span>
+                                <p class="text-xs text-slate-500">Untuk pembebasan/pengurangan bea masuk di negara tujuan via perjanjian FTA dagang bebas.</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-blue-600 uppercase tracking-wider block mb-1">04. Sertifikat Karantina</span>
+                                <p class="text-xs text-slate-500">Wajib untuk produk komoditas pertanian (kopi) dari lembaga karantina resmi negara.</p>
+                            </div>
+                        </div>
+
+                        <!-- PEB Fields Quick Reference -->
+                        <div class="bg-blue-50 border border-blue-100 rounded-xl p-5 space-y-3">
+                            <h4 class="font-bold text-blue-900 text-sm">📋 Kolom Utama Formulir PEB di INSW</h4>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full text-xs text-slate-700">
+                                    <thead class="bg-blue-100 text-blue-800 font-semibold">
+                                        <tr>
+                                            <th class="py-1.5 px-3 text-left">No</th>
+                                            <th class="py-1.5 px-3 text-left">Field</th>
+                                            <th class="py-1.5 px-3 text-left">Contoh Input</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-blue-50">
+                                        <tr><td class="py-1.5 px-3 font-semibold">1</td><td class="py-1.5 px-3">NPWP Eksportir</td><td class="py-1.5 px-3 text-slate-500 italic">01.234.567.8-000.000</td></tr>
+                                        <tr><td class="py-1.5 px-3 font-semibold">2</td><td class="py-1.5 px-3">NIB / API-P</td><td class="py-1.5 px-3 text-slate-500 italic">00000XXXXXXXXX</td></tr>
+                                        <tr><td class="py-1.5 px-3 font-semibold">3</td><td class="py-1.5 px-3">Kode HS 8-Digit</td><td class="py-1.5 px-3 text-slate-500 italic">0901.11.10</td></tr>
+                                        <tr><td class="py-1.5 px-3 font-semibold">4</td><td class="py-1.5 px-3">Harga Transaksi (USD)</td><td class="py-1.5 px-3 text-slate-500 italic">USD 5.000,00</td></tr>
+                                        <tr><td class="py-1.5 px-3 font-semibold">5</td><td class="py-1.5 px-3">Incoterms</td><td class="py-1.5 px-3 text-slate-500 italic">FOB Jakarta</td></tr>
+                                        <tr><td class="py-1.5 px-3 font-semibold">6</td><td class="py-1.5 px-3">Pelabuhan Muat</td><td class="py-1.5 px-3 text-slate-500 italic">Tanjung Priok (IDTPP)</td></tr>
+                                        <tr><td class="py-1.5 px-3 font-semibold">7</td><td class="py-1.5 px-3">Pelabuhan Tujuan</td><td class="py-1.5 px-3 text-slate-500 italic">Shanghai (CNSHA)</td></tr>
+                                        <tr><td class="py-1.5 px-3 font-semibold">8</td><td class="py-1.5 px-3">Negara Tujuan</td><td class="py-1.5 px-3 text-slate-500 italic">China (CN)</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             TAB 2: PEDOMAN KUR & BANK PENYALUR
+        ═══════════════════════════════════════ -->
+        <div id="tab-kur" class="tab-content hidden transition-opacity duration-300">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Sidebar -->
+                <div class="space-y-6 lg:col-span-1">
+                    <!-- KUR General Terms -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-950 text-base flex items-center space-x-2">
+                            <span class="p-1.5 bg-green-50 text-green-600 rounded-lg">🏷️</span>
+                            <span>Ketentuan Umum KUR</span>
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="p-3 bg-slate-50 rounded-lg">
+                                <span class="text-xs text-slate-500 block">Suku Bunga Program</span>
+                                <span class="text-lg font-bold text-green-700">6% efektif per tahun</span>
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-lg">
+                                <span class="text-xs text-slate-500 block">Syarat Minimal Usaha</span>
+                                <span class="text-sm font-semibold text-slate-800">Berjalan aktif minimal 6 bulan</span>
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-lg">
+                                <span class="text-xs text-slate-500 block">Agunan</span>
+                                <span class="text-sm font-semibold text-slate-800">Tanpa agunan untuk Super Mikro & Mikro</span>
+                            </div>
+                            <div class="p-3 bg-red-50 text-red-800 rounded-lg text-xs">
+                                <strong>Peringatan:</strong> Suku bunga KUR adalah <strong>6% efektif per tahun</strong>. Dilarang menambahkan biaya provisi atau biaya tersembunyi lainnya di luar ketentuan.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Document Checklist -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                        <h3 class="font-bold text-slate-950 text-base mb-3">Persyaratan Dokumen Pengaju</h3>
+                        <ul class="space-y-2.5 text-xs text-slate-600">
+                            <li class="flex items-start space-x-2">
+                                <span class="text-green-600 flex-shrink-0 mt-0.5">✓</span>
+                                <span>KTP Pemohon (Asli & Salinan)</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-green-600 flex-shrink-0 mt-0.5">✓</span>
+                                <span>KTP Suami/Istri (jika sudah berkeluarga)</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-green-600 flex-shrink-0 mt-0.5">✓</span>
+                                <span>Salinan Kartu Keluarga (KK)</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-green-600 flex-shrink-0 mt-0.5">✓</span>
+                                <span>NIB (Nomor Induk Berusaha) aktif</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-green-600 flex-shrink-0 mt-0.5">✓</span>
+                                <span>NPWP Aktif (Wajib untuk plafon &gt; Rp 50 juta)</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-green-600 flex-shrink-0 mt-0.5">✓</span>
+                                <span>Draf Proposal Rencana Bisnis</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-green-600 flex-shrink-0 mt-0.5">✓</span>
+                                <span>Rekening Koran 3 bulan terakhir</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-blue-600 flex-shrink-0 mt-0.5">ℹ</span>
+                                <span>Surat Keterangan Usaha (SKU) dari kelurahan</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Installment Simulation -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                        <h3 class="font-bold text-slate-950 text-base mb-3">Simulasi Angsuran KUR</h3>
+                        <p class="text-xs text-slate-500 mb-3">Suku bunga: <strong>6% efektif per tahun</strong> | Tenor maks 3–5 tahun</p>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-xs text-slate-600">
+                                <thead class="bg-slate-50 text-slate-700 font-medium">
+                                    <tr>
+                                        <th class="py-2 px-2 text-left">Plafond</th>
+                                        <th class="py-2 px-2 text-left">Tenor</th>
+                                        <th class="py-2 px-2 text-left">Angsuran/bln*</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr>
+                                        <td class="py-2 px-2 font-semibold text-blue-600">Rp 10.000.000</td>
+                                        <td class="py-2 px-2">3 tahun</td>
+                                        <td class="py-2 px-2">± Rp 308.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 px-2 font-semibold text-amber-600">Rp 25.000.000</td>
+                                        <td class="py-2 px-2">4 tahun</td>
+                                        <td class="py-2 px-2">± Rp 591.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 px-2 font-semibold text-emerald-600">Rp 100.000.000</td>
+                                        <td class="py-2 px-2">5 tahun</td>
+                                        <td class="py-2 px-2">± Rp 1.933.000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-2 italic">*Simulasi aproximasi, dapat berbeda tergantung program berjalan. Verifikasi dengan bank penjalur.</p>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="lg:col-span-2 space-y-6">
+
+                    <!-- 3 KUR Scheme Cards -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-900 text-base sm:text-lg border-b border-slate-100 pb-2">Skema Klasifikasi KUR Pemerintah</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                            <!-- Super Mikro -->
+                            <div class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 flex flex-col justify-between min-h-[160px]">
+                                <div>
+                                    <span class="inline-block bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded-full mb-2">Skema I</span>
+                                    <h4 class="font-bold text-slate-900 text-sm">KUR Super Mikro</h4>
+                                    <p class="text-xs text-slate-500 mt-1">Plafond pinjaman modal <strong>maksimal sampai dengan Rp 10 Juta</strong>.</p>
+                                </div>
+                                <div class="mt-3 pt-3 border-t border-indigo-100">
+                                    <span class="text-xs font-semibold text-indigo-700 block">Tanpa Agunan Tambahan</span>
+                                    <span class="text-xs text-indigo-600 mt-1 block">Suku bunga: 6% efektif/thn</span>
+                                </div>
+                            </div>
+
+                            <!-- Mikro -->
+                            <div class="bg-amber-50/50 p-4 rounded-xl border border-amber-100 flex flex-col justify-between min-h-[160px]">
+                                <div>
+                                    <span class="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full mb-2">Skema II</span>
+                                    <h4 class="font-bold text-slate-900 text-sm">KUR Mikro</h4>
+                                    <p class="text-xs text-slate-500 mt-1">Plafond modal di atas <strong>Rp 10 Juta s.d Rp 50 Juta</strong> per debitur.</p>
+                                </div>
+                                <div class="mt-3 pt-3 border-t border-amber-100">
+                                    <span class="text-xs font-semibold text-amber-700 block">Tanpa Jaminan Fisik</span>
+                                    <span class="text-xs text-amber-600 mt-1 block">Suku bunga: 6% efektif/thn</span>
+                                </div>
+                            </div>
+
+                            <!-- Kecil -->
+                            <div class="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 flex flex-col justify-between min-h-[160px]">
+                                <div>
+                                    <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full mb-2">Skema III</span>
+                                    <h4 class="font-bold text-slate-900 text-sm">KUR Kecil</h4>
+                                    <p class="text-xs text-slate-500 mt-1">Plafond skala usaha di atas <strong>Rp 50 Juta s.d Rp 500 Juta</strong>.</p>
+                                </div>
+                                <div class="mt-3 pt-3 border-t border-emerald-100">
+                                    <span class="text-xs font-semibold text-emerald-700 block">Agunan Sesuai Penilaian Risiko</span>
+                                    <span class="text-xs text-emerald-600 mt-1 block">Suku bunga: 6% efektif/thn</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Plafond Threshold Bar -->
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <p class="text-xs font-semibold text-slate-700 mb-3">Batas Plafond Pengajuan KUR:</p>
+                            <div class="relative">
+                                <div class="flex justify-between text-xs text-slate-500 mb-1">
+                                    <span>Rp 0</span><span>Rp 10 Jt</span><span>Rp 50 Jt</span><span>Rp 500 Jt</span>
+                                </div>
+                                <div class="h-3 bg-slate-200 rounded-full overflow-hidden flex">
+                                    <div class="bg-indigo-400 h-full w-[2%] rounded-l-full"></div>
+                                    <div class="bg-amber-400 h-full w-[8%]"></div>
+                                    <div class="bg-emerald-400 h-full flex-1 rounded-r-full"></div>
+                                </div>
+                                <div class="flex justify-between text-xs font-semibold mt-1">
+                                    <span class="text-indigo-600">Super Mikro ≤10 Jt</span>
+                                    <span class="text-amber-600">Mikro 10–50 Jt</span>
+                                    <span class="text-emerald-600">Kecil 50–500 Jt</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KUR Special / Pandemic Policy -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-900 text-base sm:text-lg border-b border-slate-100 pb-2">📜 Kebijakan Khusus KUR (Covid-19 — Permenko 6/2020)</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-xs text-slate-600">
+                                <thead class="bg-slate-50 text-slate-700 font-medium">
+                                    <tr>
+                                        <th class="py-2 px-3 text-left">Kebijakan</th>
+                                        <th class="py-2 px-3 text-left">Jumlah Debtor</th>
+                                        <th class="py-2 px-3 text-left">Total Plafond</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr>
+                                        <td class="py-3 px-3 font-medium">Subsidi Bunga Tambahan</td>
+                                        <td class="py-3 px-3">7,02 juta debitur</td>
+                                        <td class="py-3 px-3">Rp 186,5 Triliun</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 px-3 font-medium">Penundaan Angsuran Pokok 6 Bulan</td>
+                                        <td class="py-3 px-3">1,51 juta debitur</td>
+                                        <td class="py-3 px-3">Rp 48,18 Triliun</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 px-3 font-medium">Perpanjangan Tenor</td>
+                                        <td class="py-3 px-3">1,51 juta debitur</td>
+                                        <td class="py-3 px-3">Rp 47,31 Triliun</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-slate-500 italic">*Berdasarkan data Permenko 6/2020 tentang Perlakuan Khusus Bagi Penerima KUR Terdampak Pandemi Covid-19.</p>
+                    </div>
+
+                    <!-- Bank Comparison: BRI vs BNI -->
+                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                        <div class="bg-slate-100/50 px-6 py-4 border-b border-slate-200">
+                            <h3 class="font-bold text-slate-900 text-base sm:text-lg">Perbandingan Bank Penyalur Utama</h3>
+                        </div>
+                        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- BRI -->
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-2">
+                                    <span class="h-7 w-7 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">BRI</span>
+                                    <h4 class="font-bold text-slate-900 text-sm">Kredit Usaha Rakyat (BRI)</h4>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    Sangat direkomendasikan untuk jenis usaha mikro yang berlokasi di daerah pelosok atau kecamatan karena sebaran unit kerja paling luas di tanah air. Penilaian risiko dan survei menggunakan platform <strong>Aplikasi Digital BRI (BRISPOT)</strong>.
+                                </p>
+                                <div class="bg-blue-50 rounded-lg p-3 space-y-1 text-xs text-slate-600">
+                                    <div class="flex justify-between">
+                                        <span class="font-medium text-slate-700">Produk:</span>
+                                        <span>KUR Super Mikro, Mikro, Kecil</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="font-medium text-slate-700">Platform:</span>
+                                        <span>BRISPOT</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="font-medium text-slate-700">Suku Bunga:</span>
+                                        <span class="font-bold text-green-700">6% efektif per tahun</span>
+                                    </div>
+                                </div>
+                                <a href="https://bri.co.id" target="_blank" class="inline-block text-xs font-medium text-blue-600 hover:underline">Situs Resmi BRI &rarr;</a>
+                            </div>
+
+                            <!-- BNI -->
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-2">
+                                    <span class="h-7 w-7 rounded-full bg-orange-600 text-white flex items-center justify-center font-bold text-xs">BNI</span>
+                                    <h4 class="font-bold text-slate-900 text-sm">Kredit Usaha Rakyat (BNI)</h4>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    Memiliki keunggulan ekosistem bagi pelaku UMKM berorientasi pasar ekspor global melalui program pendampingan komprehensif <strong>BNI Xpora</strong>. Cocok bagi eksportir yang membutuhkan dukungan tambahan untuk akses pasar internasional.
+                                </p>
+                                <div class="bg-orange-50 rounded-lg p-3 space-y-1 text-xs text-slate-600">
+                                    <div class="flex justify-between">
+                                        <span class="font-medium text-slate-700">Produk:</span>
+                                        <span>KUR Super Mikro, Mikro, Kecil, Khusus</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="font-medium text-slate-700">Program:</span>
+                                        <span>BNI Xpora (pendampingan ekspor)</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="font-medium text-slate-700">Suku Bunga:</span>
+                                        <span class="font-bold text-green-700">6% efektif per tahun</span>
+                                    </div>
+                                </div>
+                                <a href="https://www.bni.co.id" target="_blank" class="inline-block text-xs font-medium text-blue-600 hover:underline">Situs Resmi BNI &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Application Flow -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                        <h3 class="font-bold text-slate-900 text-base sm:text-lg border-b border-slate-100 pb-2 mb-4">Alur Pengajuan KUR (7 Langkah)</h3>
+                        <div class="overflow-x-auto">
+                            <div class="flex items-center gap-2 min-w-max">
+                                <div class="flex flex-col items-center space-y-2 min-w-[120px]">
+                                    <div class="h-10 w-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">1</div>
+                                    <span class="text-xs font-medium text-slate-700 text-center">Kunjungi Gerai Bank</span>
+                                </div>
+                                <div class="h-0.5 w-8 bg-slate-200 flex-shrink-0"></div>
+                                <div class="flex flex-col items-center space-y-2 min-w-[120px]">
+                                    <div class="h-10 w-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">2</div>
+                                    <span class="text-xs font-medium text-slate-700 text-center">Serahkan Dokumen</span>
+                                </div>
+                                <div class="h-0.5 w-8 bg-slate-200 flex-shrink-0"></div>
+                                <div class="flex flex-col items-center space-y-2 min-w-[120px]">
+                                    <div class="h-10 w-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">3</div>
+                                    <span class="text-xs font-medium text-slate-700 text-center">Survei & Penilaian Risiko</span>
+                                </div>
+                                <div class="h-0.5 w-8 bg-slate-200 flex-shrink-0"></div>
+                                <div class="flex flex-col items-center space-y-2 min-w-[120px]">
+                                    <div class="h-10 w-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">4</div>
+                                    <span class="text-xs font-medium text-slate-700 text-center">Analisis Kredit</span>
+                                </div>
+                                <div class="h-0.5 w-8 bg-slate-200 flex-shrink-0"></div>
+                                <div class="flex flex-col items-center space-y-2 min-w-[120px]">
+                                    <div class="h-10 w-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">5</div>
+                                    <span class="text-xs font-medium text-slate-700 text-center">Persetujuan Komite</span>
+                                </div>
+                                <div class="h-0.5 w-8 bg-slate-200 flex-shrink-0"></div>
+                                <div class="flex flex-col items-center space-y-2 min-w-[120px]">
+                                    <div class="h-10 w-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">6</div>
+                                    <span class="text-xs font-medium text-slate-700 text-center">Akad Kredit</span>
+                                </div>
+                                <div class="h-0.5 w-8 bg-slate-200 flex-shrink-0"></div>
+                                <div class="flex flex-col items-center space-y-2 min-w-[120px]">
+                                    <div class="h-10 w-10 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-sm">7</div>
+                                    <span class="text-xs font-medium text-slate-700 text-center">Pencairan Dana</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-4 italic">Estimasi waktu proses: <strong>3–14 hari kerja</strong> sejak dokumen lengkap disetor. Gunakan <strong>BRISPOT</strong> (BRI) atau aplikasi digital bank terkait untuk mempercepat.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ─── FOOTER ─── -->
+    <footer class="mt-16 pt-8 border-t border-slate-200 text-center text-xs text-slate-500 px-4">
+        <p class="mb-2"><strong>SewaBantu & EksporMudah Engine</strong> — Solusi Dokumen Mandiri Berbasis Aturan Baku Tanpa Halusinasi AI</p>
+        <p>Pengguna wajib memproses registrasi legal, pengajuan izin, dan pemenuhan dokumen secara mandiri di masing-masing instansi resmi pemerintah.</p>
+        <p class="mt-2 text-slate-400">Sumber: kur.ekon.go.id · insw.go.id · jdih.ekon.go.id · DJBC · Kemendag RI</p>
+    </footer>
+
+    <!-- Vanilla JS Tab Switcher -->
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(function(el) {
+                el.classList.add('hidden');
+            });
+            document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.classList.remove('border-blue-600', 'text-blue-600');
+                btn.classList.add('border-transparent', 'text-slate-500');
+            });
+            document.getElementById(tabId).classList.remove('hidden');
+            var activeBtn = document.getElementById('btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-transparent', 'text-slate-500');
+                activeBtn.classList.add('border-blue-600', 'text-blue-600');
+            }
+        }
+    </script>
+
+</body>
+</html>

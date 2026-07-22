@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LegalKilat - Modul Kepatuhan Ekspor & Generator Dokumen AI</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="/js/app-ui.js"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#24389C",
+              secondary: "#006C49",
+              surface: "#F8FAFF",
+              "on-surface": "#0B1C30",
+              "on-surface-variant": "#565E74",
+              "outline-variant": "#E2E8F0"
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        body {
+            background-color: #F8FAFF;
+            color: #0B1C30;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Fallback Print Styling */
+        @media print {
+            .no-print, header, footer, #sidebar-container, form, nav, button {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            #invoice-preview-card {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100% !important;
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 !important;
+                padding: 20px !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex">
+
+    <!-- Unified Collapsible Left Sidebar -->
+    <div id="sidebar-container" class="shrink-0 sticky top-0 h-screen z-50 no-print"></div>
+
+    <!-- Main Outer Layout Wrapper -->
+    <div class="flex-grow flex flex-col min-h-screen overflow-x-hidden">
+
+        <!-- Top AppBar -->
+        <header class="bg-white border-b border-slate-100 shadow-xs sticky top-0 z-40 flex items-center justify-between px-6 h-16 w-full no-print">
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-slate-800">LegalKilat Platform</span>
+                <span class="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200/60 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    Kepatuhan Ekspor & Commercial Invoice
+                </span>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button id="user-logout-btn" class="text-xs font-bold text-red-600 hover:text-red-800 transition flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    Keluar Sesi
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <main class="flex-grow container mx-auto max-w-5xl px-6 py-8 space-y-8">
+            <!-- Header -->
+            <section class="space-y-2 no-print">
+                <h2 class="text-2xl font-bold text-[#0B1C30]">Modul Analisis Kepatuhan Ekspor & Generator Dokumen AI</h2>
+                <p class="text-xs text-slate-500">Periksa klasifikasi Kode HS BTKI, batas bea keluar, dan jenerasikan template Commercial Invoice & Packing List secara otomatis</p>
+            </section>
+
+            <!-- Inline Error Banner -->
+            <div id="ekspor-error-banner" class="hidden no-print"></div>
+
+            <!-- Grid Section 1: Form KBLI & Output Regulatotif -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start no-print">
+                
+                <!-- Form Selection (5 cols) -->
+                <section class="lg:col-span-5 space-y-6">
+                    <form id="ekspor-form" class="bg-white border border-slate-100 rounded-2xl p-6 space-y-6 shadow-sm">
+                        <h3 class="text-base font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[#006C49]">policy</span>
+                            <span>Pilih Komoditas Ekspor</span>
+                        </h3>
+
+                        <!-- Sektor Usaha (8 KBLI) -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-700">
+                                Komoditas Ekspor Utama (KBLI) <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select id="sektor-usaha" required 
+                                        style="-webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: none;" 
+                                        class="w-full appearance-none bg-none px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#006C49] focus:border-[#006C49] text-sm font-semibold text-slate-700 pr-10">
+                                    <option value="01240" selected>01240 - Perkebunan Kopi (Green & Instant Beans)</option>
+                                    <option value="14111">14111 - Pakaian Jadi Konveksi Batik Tradisional</option>
+                                    <option value="16294">16294 - Industri Kerajinan Tangan Kayu & Rotan</option>
+                                    <option value="10731">10731 - Industri Pengolahan Kakao & Cokelat Olahan</option>
+                                    <option value="10771">10771 - Industri Pengolahan & Pengemasan Teh Hijau/Hitam</option>
+                                    <option value="10212">10212 - Industri Pengolahan Udang Beku & Kalengan</option>
+                                    <option value="31001">31001 - Industri Furnitur Bambu & Anyaman Alami</option>
+                                    <option value="15201">15201 - Industri Alas Kaki & Sepatu Olahraga Kulit</option>
+                                </select>
+                                <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 flex items-center text-slate-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" id="save-ekspor-btn" class="w-full py-3.5 bg-[#006C49] text-white font-bold rounded-xl text-xs hover:brightness-110 active:scale-[0.98] transition flex items-center justify-center gap-2 shadow-md">
+                            <span>Simpan Komoditas & Lanjutkan ke Proposal</span>
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Analysis Display (7 cols) -->
+                <section class="lg:col-span-7 space-y-6">
+                    <div class="bg-white border border-slate-100 rounded-2xl p-6 space-y-5 shadow-sm">
+                        <h3 class="text-base font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[#24389C]">verified</span>
+                            <span>Hasil Analisis Kepatuhan Kepabeanan</span>
+                        </h3>
+
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center bg-slate-50 p-3 rounded-lg text-xs">
+                                <span class="text-slate-500 font-semibold">Komoditas:</span>
+                                <span id="res-komoditas" class="font-bold text-[#24389C]">Perkebunan Kopi (KBLI 01240)</span>
+                            </div>
+
+                            <!-- HS Codes Table -->
+                            <div class="overflow-x-auto rounded border border-slate-200">
+                                <table class="min-w-full text-xs text-left">
+                                    <thead class="bg-slate-50 font-bold border-b border-slate-200 text-slate-700">
+                                        <tr>
+                                            <th class="py-2 px-3">Kode HS</th>
+                                            <th class="py-2 px-3">Deskripsi Barang</th>
+                                            <th class="py-2 px-3">Bea Keluar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="hs-code-table" class="divide-y divide-slate-100">
+                                        <!-- Dynamic -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Required Documents -->
+                            <div class="space-y-2 pt-2">
+                                <h4 class="text-xs font-bold text-slate-700">Dokumen & Sertifikasi Ekspor Wajib:</h4>
+                                <ul id="res-docs-list" class="space-y-2 text-xs text-slate-600">
+                                    <!-- Dynamic -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Section 2: AI Generated Document Template Feature -->
+            <section class="bg-white border border-slate-100 rounded-2xl p-8 space-y-6 shadow-sm">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-100 pb-4 no-print">
+                    <div>
+                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-bold mb-1">
+                            <span class="material-symbols-outlined text-xs">auto_awesome</span>
+                            AI Generated Document Template
+                        </span>
+                        <h3 class="text-xl font-bold text-slate-800">Generator Draf Commercial Invoice Ekspor</h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Edit variabel di bawah ini untuk menghasilkan draf faktur komersial internasional yang siap diunduh.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="copy-draft-btn" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-sm">content_copy</span>
+                            Salin Draf Teks
+                        </button>
+                        <button id="print-draft-btn" class="px-4 py-2 bg-[#24389C] text-white text-xs font-semibold rounded-lg hover:brightness-110 transition flex items-center gap-1.5 shadow">
+                            <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
+                            Cetak Draf Faktur (PDF)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Editable Template Form Inputs -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl text-xs no-print">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Nama Perusahaan Eksportir:</label>
+                        <input id="exp-name" type="text" value="PT Ekspor Indonesia Raya" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg font-semibold text-slate-800"/>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Nama Pembeli / Importir:</label>
+                        <input id="imp-name" type="text" value="Global Trading Corp (Singapore)" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg font-semibold text-slate-800"/>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Nomor Faktur / Invoice No:</label>
+                        <input id="inv-no" type="text" value="INV-2026-EXP/089" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg font-semibold text-slate-800"/>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Kuantitas Barang (Kg / Unit):</label>
+                        <input id="exp-qty" type="number" value="1000" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg font-semibold text-slate-800"/>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Harga Satuan ($ USD):</label>
+                        <input id="exp-price" type="number" value="15" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg font-semibold text-slate-800"/>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Pelabuhan Muat (Port of Loading):</label>
+                        <input id="port-name" type="text" value="Tanjung Priok, Jakarta (IDTPP)" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg font-semibold text-slate-800"/>
+                    </div>
+                </div>
+
+                <!-- Isolated Target Printable Invoice Card Container -->
+                <div id="invoice-preview-card" class="bg-white border-2 border-slate-200 p-8 rounded-xl font-mono text-[11px] leading-relaxed space-y-4 text-slate-800 shadow-inner">
+                    <div class="flex justify-between items-start border-b-2 border-slate-800 pb-4">
+                        <div>
+                            <h4 class="font-bold text-base tracking-widest text-[#24389C]" id="prev-exp-name">PT EKSPOR INDONESIA RAYA</h4>
+                            <p class="text-[10px] text-slate-500">Jakarta, Indonesia | Email: export@eksporindonesia.com</p>
+                        </div>
+                        <div class="text-right">
+                            <h4 class="font-bold text-sm text-slate-800">COMMERCIAL INVOICE</h4>
+                            <p class="text-[10px] text-slate-500" id="prev-inv-no">INVOICE NO: INV-2026-EXP/089</p>
+                            <p class="text-[10px] text-slate-500">DATE: 20 July 2026</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 text-[10px] bg-slate-50 p-3 rounded">
+                        <div>
+                            <p class="font-bold text-slate-500 uppercase">CONSIGNEE / BUYER:</p>
+                            <p class="font-bold text-slate-800" id="prev-imp-name">Global Trading Corp (Singapore)</p>
+                            <p class="text-slate-600">10 Marina Boulevard, Singapore 018983</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-500 uppercase">SHIPMENT DETAILS:</p>
+                            <p class="text-slate-700">PORT OF LOADING: <span id="prev-port" class="font-bold">Tanjung Priok, Jakarta (IDTPP)</span></p>
+                            <p class="text-slate-700">PAYMENT TERMS: Letter of Credit (L/C) at Sight / T/T</p>
+                        </div>
+                    </div>
+
+                    <table class="w-full text-left border-collapse border border-slate-200 text-[10px]">
+                        <thead class="bg-slate-100 border-b border-slate-200">
+                            <tr>
+                                <th class="p-2 border-r border-slate-200">DESCRIPTION OF GOODS</th>
+                                <th class="p-2 border-r border-slate-200">HS CODE</th>
+                                <th class="p-2 text-right border-r border-slate-200">QTY</th>
+                                <th class="p-2 text-right border-r border-slate-200">UNIT PRICE ($)</th>
+                                <th class="p-2 text-right">TOTAL VALUE ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="p-2 border-r border-slate-200 font-sans font-semibold" id="prev-desc">Perkebunan Kopi (Green & Instant Beans)</td>
+                                <td class="p-2 border-r border-slate-200 font-bold text-[#24389C]" id="prev-hs">0901.11.10</td>
+                                <td class="p-2 text-right border-r border-slate-200" id="prev-qty">1,000 Kg</td>
+                                <td class="p-2 text-right border-r border-slate-200" id="prev-price">$ 15.00</td>
+                                <td class="p-2 text-right font-bold text-[#006C49]" id="prev-total">$ 15,000.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="flex justify-between items-end pt-4">
+                        <div class="text-[9px] text-slate-400 italic">
+                            * Electronic invoice generated by LegalKilat AI Engine. Fully compliant with BTKI 2022.
+                        </div>
+                        <div class="text-center">
+                            <p class="text-[9px] text-slate-500 mb-8">AUTHORIZED SIGNATURE</p>
+                            <p class="font-bold border-t border-slate-400 pt-1" id="prev-sign-name">PT EKSPOR INDONESIA RAYA</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-6 border-t border-slate-100 text-center text-xs text-slate-400 w-full bg-white no-print">
+            <p>© 2026 LegalKilat. Hak Cipta Dilindungi.</p>
+        </footer>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initLegalKilatSidebar({ role: 'user', activePath: '/dashboard/ekspor.html' });
+            enableFormPersistence(document.body, 'legalkilat_ekspor_state');
+
+            const sektorSelect = document.getElementById('sektor-usaha');
+            const resKomoditas = document.getElementById('res-komoditas');
+            const hsTable = document.getElementById('hs-code-table');
+            const docsList = document.getElementById('res-docs-list');
+
+            // Form Template Inputs
+            const expName = document.getElementById('exp-name');
+            const impName = document.getElementById('imp-name');
+            const invNo = document.getElementById('inv-no');
+            const expQty = document.getElementById('exp-qty');
+            const expPrice = document.getElementById('exp-price');
+            const portName = document.getElementById('port-name');
+
+            // Document Preview Elements
+            const prevExpName = document.getElementById('prev-exp-name');
+            const prevSignName = document.getElementById('prev-sign-name');
+            const prevImpName = document.getElementById('prev-imp-name');
+            const prevInvNo = document.getElementById('prev-inv-no');
+            const prevDesc = document.getElementById('prev-desc');
+            const prevHs = document.getElementById('prev-hs');
+            const prevQty = document.getElementById('prev-qty');
+            const prevPrice = document.getElementById('prev-price');
+            const prevTotal = document.getElementById('prev-total');
+            const prevPort = document.getElementById('prev-port');
+
+            const commodityData = {
+                '01240': {
+                    name: 'Perkebunan Kopi (Green & Instant Beans)',
+                    hs: [
+                        { code: '0901.11.10', desc: 'Kopi Green Beans (Bebas Bea Keluar)', duty: '0%' },
+                        { code: '2101.11.10', desc: 'Kopi Instan Olahan Kemasan', duty: '10%' }
+                    ],
+                    docs: [
+                        'Commercial Invoice & Packing List (Komersial)',
+                        'Certificate of Origin (COO / SKA Form D/E)',
+                        'Sertifikat Karantina Pertanian (Phytosanitary Certificate)'
+                    ]
+                },
+                '14111': {
+                    name: 'Pakaian Jadi Konveksi Batik Tradisional',
+                    hs: [
+                        { code: '6204.42.10.00', desc: 'Pakaian wanita katun bermotif batik', duty: 'MFN 25%' }
+                    ],
+                    docs: [
+                        'Commercial Invoice & Packing List',
+                        'Certificate of Origin (COO / SKA Akses Diskonto FTA)',
+                        'Sertifikat Keaslian Batik (Batikmark Indonesia)'
+                    ]
+                },
+                '16294': {
+                    name: 'Industri Kerajinan Tangan Kayu & Rotan',
+                    hs: [
+                        { code: '4420.10.00.00', desc: 'Patung & Ornamen Dekorasi Kayu', duty: '0%' },
+                        { code: '4601.21.00.00', desc: 'Tas & Anyaman Rotan Alami', duty: '0%' }
+                    ],
+                    docs: [
+                        'Commercial Invoice & Packing List',
+                        'Sertifikat V-Legal (SVLK Kelestarian Hutan)',
+                        'Fumigation Certificate (Bebas Hama)'
+                    ]
+                },
+                '10731': {
+                    name: 'Industri Pengolahan Kakao & Cokelat Olahan',
+                    hs: [
+                        { code: '1801.00.00.00', desc: 'Biji Kakao Mentah Utuh', duty: '5%' },
+                        { code: '1806.31.00.00', desc: 'Cokelat Olahan Batangan', duty: '0%' }
+                    ],
+                    docs: [
+                        'Commercial Invoice & Packing List',
+                        'Sertifikat HACCP / Food Safety System',
+                        'Phytosanitary Certificate (Badan Karantina)'
+                    ]
+                },
+                '10771': {
+                    name: 'Industri Pengolahan & Pengemasan Teh Hijau/Hitam',
+                    hs: [
+                        { code: '0902.10.00.00', desc: 'Teh Hijau Kemasan Ritel ≤ 3kg', duty: '5%' }
+                    ],
+                    docs: [
+                        'Commercial Invoice & Packing List',
+                        'Sertifikat Halal Indonesia (BPJPH)',
+                        'Phytosanitary Certificate'
+                    ]
+                },
+                '10212': {
+                    name: 'Industri Pengolahan Udang Beku & Kalengan',
+                    hs: [
+                        { code: '1605.21.00.00', desc: 'Udang Olahan Beku / Preserved', duty: '0%' }
+                    ],
+                    docs: [
+                        'Commercial Invoice & Packing List',
+                        'Health Certificate BKIPM (Kementerian KKP)',
+                        'Certificate of Analysis (Cold Chain Log)'
+                    ]
+                },
+                '31001': {
+                    name: 'Industri Furnitur Bambu & Anyaman Alami',
+                    hs: [
+                        { code: '9403.82.00.00', desc: 'Furnitur Meja/Kursi dari Bambu', duty: '0%' }
+                    ],
+                    docs: [
+                        'Commercial Invoice & Packing List',
+                        'Sertifikat V-Legal (SVLK Bambu)',
+                        'Fumigation Certificate'
+                    ]
+                },
+                '15201': {
+                    name: 'Industri Alas Kaki & Sepatu Olahraga Kulit',
+                    hs: [
+                        { code: '6403.99.90.00', desc: 'Sepatu Kulit Olahraga Sol Karet', duty: 'MFN 20%' }
+                    ],
+                    docs: [
+                        'Commercial Invoice & Packing List',
+                        'Certificate of Origin (COO SKA Form AJ/IJEPA)',
+                        'Quality Inspection Certificate'
+                    ]
+                }
+            };
+
+            function updateEksporDisplay() {
+                const code = sektorSelect.value;
+                const item = commodityData[code] || commodityData['01240'];
+
+                resKomoditas.textContent = `${item.name}`;
+
+                hsTable.innerHTML = '';
+                item.hs.forEach(h => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-slate-100';
+                    tr.innerHTML = `
+                        <td class="py-2 px-3 font-mono font-bold text-[#24389C]">${h.code}</td>
+                        <td class="py-2 px-3">${h.desc}</td>
+                        <td class="py-2 px-3 font-bold text-[#006C49]">${h.duty}</td>
+                    `;
+                    hsTable.appendChild(tr);
+                });
+
+                docsList.innerHTML = '';
+                item.docs.forEach(d => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center gap-2';
+                    li.innerHTML = `<span class="material-symbols-outlined text-green-600 text-sm">check_circle</span> <span>${d}</span>`;
+                    docsList.appendChild(li);
+                });
+
+                prevDesc.textContent = item.name;
+                prevHs.textContent = item.hs[0].code;
+                updateInvoiceLivePreview();
+            }
+
+            function updateInvoiceLivePreview() {
+                prevExpName.textContent = (expName.value || 'PT EKSPOR INDONESIA RAYA').toUpperCase();
+                prevSignName.textContent = (expName.value || 'PT EKSPOR INDONESIA RAYA').toUpperCase();
+                prevImpName.textContent = impName.value || 'Global Trading Corp (Singapore)';
+                prevInvNo.textContent = `INVOICE NO: ${invNo.value || 'INV-2026-EXP/089'}`;
+                prevPort.textContent = portName.value || 'Tanjung Priok, Jakarta (IDTPP)';
+
+                const qty = parseFloat(expQty.value) || 0;
+                const price = parseFloat(expPrice.value) || 0;
+                const total = qty * price;
+
+                prevQty.textContent = `${qty.toLocaleString('en-US')} Kg`;
+                prevPrice.textContent = `$ ${price.toFixed(2)}`;
+                prevTotal.textContent = `$ ${total.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+            }
+
+            sektorSelect.addEventListener('change', updateEksporDisplay);
+            [expName, impName, invNo, expQty, expPrice, portName].forEach(input => {
+                input.addEventListener('input', updateInvoiceLivePreview);
+            });
+
+            updateEksporDisplay();
+
+            // Save Form
+            document.getElementById('ekspor-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const saveBtn = document.getElementById('save-ekspor-btn');
+                const originalContent = saveBtn.innerHTML;
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = 'Menyimpan Data...';
+
+                try {
+                    const response = await fetch('/api/submit-questionnaire', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ kbli: sektorSelect.value })
+                    });
+
+                    const data = await response.json();
+                    if (response.ok && data.success) {
+                        showToast('Data komoditas ekspor berhasil disimpan!', 'success');
+                        setTimeout(() => {
+                            window.location.href = '/dashboard/pratinjau.html';
+                        }, 1000);
+                    } else {
+                        showInlineAlert('ekspor-error-banner', data.message || 'Gagal menyimpan komoditas ekspor.');
+                        saveBtn.disabled = false;
+                        saveBtn.innerHTML = originalContent;
+                    }
+                } catch (err) {
+                    console.error(err);
+                    showToast('Gagal terhubung dengan server.', 'error');
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = originalContent;
+                }
+            });
+
+            // Copy Text Draft
+            document.getElementById('copy-draft-btn').addEventListener('click', () => {
+                const textToCopy = document.getElementById('invoice-preview-card').innerText;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showToast('Draf Commercial Invoice berhasil disalin ke clipboard!', 'success');
+                }).catch(err => {
+                    console.error('Gagal menyalin:', err);
+                    showToast('Gagal menyalin teks ke clipboard.', 'error');
+                });
+            });
+
+            // PDF Invoice Export via html2pdf (Render Fix & Prescribed Options)
+            document.getElementById('print-draft-btn').addEventListener('click', () => {
+                const printBtn = document.getElementById('print-draft-btn');
+                const origBtnText = printBtn.innerHTML;
+
+                printBtn.disabled = true;
+                printBtn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">refresh</span> Mengunduh PDF...';
+
+                // Ensure latest preview state rendered in DOM before capturing
+                updateInvoiceLivePreview();
+
+                setTimeout(() => {
+                    const element = document.getElementById('invoice-preview-card');
+                    if (!element) {
+                        showToast('Gagal menemukan elemen pratinjau faktur.', 'error');
+                        printBtn.disabled = false;
+                        printBtn.innerHTML = origBtnText;
+                        return;
+                    }
+
+                    const opt = {
+                      margin:       [10, 10, 10, 10],
+                      filename:     `Invoice_${document.getElementById('inv-no')?.value || 'EXP-001'}.pdf`,
+                      image:        { type: 'jpeg', quality: 0.98 },
+                      html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0 },
+                      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    };
+
+                    html2pdf().set(opt).from(element).save().then(() => {
+                        showToast('PDF Draf Commercial Invoice berhasil diunduh.', 'success');
+                        printBtn.disabled = false;
+                        printBtn.innerHTML = origBtnText;
+                    }).catch(err => {
+                        console.error('[PDF] Error generating invoice PDF:', err);
+                        showToast('Gagal mengunduh PDF. Menggunakan fallback cetak browser...', 'error');
+                        printBtn.disabled = false;
+                        printBtn.innerHTML = origBtnText;
+                        window.print();
+                    });
+                }, 150);
+            });
+
+            // Header Logout handler using showModal
+            document.getElementById('user-logout-btn').addEventListener('click', () => {
+                showModal({
+                    title: 'Konfirmasi Keluar',
+                    message: 'Apakah Anda yakin ingin keluar dari sesi pengguna LegalKilat?',
+                    type: 'danger',
+                    confirmText: 'Ya, Keluar',
+                    onConfirm: async () => {
+                        try {
+                            const response = await fetch('/api/auth/logout', { method: 'POST' });
+                            if (response.ok) {
+                                window.location.href = '/login.html';
+                            }
+                        } catch (err) {
+                            showToast('Gagal terhubung dengan server.', 'error');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

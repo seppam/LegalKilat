@@ -1,0 +1,28 @@
+{
+  "name": "legalkilat-rag-orchestrator",
+  "version": "1.0.0",
+  "description": "Sistem RAG lokal untuk validasi pembiayaan ekspor dan KUR UMKM",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "rag",
+    "kur",
+    "umkm",
+    "ekspor"
+  ],
+  "author": "Antigravity AI",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "cheerio": "^1.0.0-rc.12",
+    "connect-mongo": "^5.1.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "mongoose": "^8.5.1"
+  }
+}

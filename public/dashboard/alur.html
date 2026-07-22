@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LegalKilat - Alur & Panduan Pengajuan</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="/js/app-ui.js"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#24389C",
+              secondary: "#006C49",
+              surface: "#F8FAFF",
+              "on-surface": "#0B1C30",
+              "on-surface-variant": "#565E74",
+              "outline-variant": "#E2E8F0"
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        body {
+            background-color: #F8FAFF;
+            color: #0B1C30;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex">
+
+    <!-- Unified Collapsible Left Sidebar -->
+    <div id="sidebar-container" class="shrink-0 sticky top-0 h-screen z-50"></div>
+
+    <!-- Main Outer Layout Wrapper -->
+    <div class="flex-grow flex flex-col min-h-screen overflow-x-hidden">
+
+        <!-- Top AppBar -->
+        <header class="bg-white border-b border-slate-100 shadow-xs sticky top-0 z-40 flex items-center justify-between px-6 h-16 w-full">
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-slate-800">LegalKilat Platform</span>
+                <span class="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200/60 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    Panduan Alur Akselerasi
+                </span>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button id="user-logout-btn" class="text-xs font-bold text-red-600 hover:text-red-800 transition flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    Keluar Sesi
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <main class="flex-grow container mx-auto max-w-lg px-6 py-10">
+            <!-- Header -->
+            <section class="mb-8 space-y-2">
+                <h2 class="text-2xl font-bold text-[#0B1C30]">Alur & Langkah Pengajuan</h2>
+                <p class="text-xs text-slate-400">Ikuti instruksi di bawah untuk mengajukan permodalan KUR dan mendaftar lisensi ekspor</p>
+            </section>
+
+            <!-- Steps Stack -->
+            <section class="space-y-4">
+                
+                <!-- Step 1 -->
+                <div class="bg-white border border-slate-100 rounded-2xl p-5 flex items-start gap-4 shadow-sm">
+                    <div class="w-8 h-8 rounded-full bg-[#24389C]/10 text-[#24389C] font-bold text-xs flex items-center justify-center shrink-0">1</div>
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-sm text-slate-800">Unduh Proposal LegalKilat</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Cetak draf kelayakan bisnis Anda yang dilengkapi dengan visualisasi cashflow dan dokumen kepabeanan yang sudah terverifikasi oleh modul RAG kami.
+                        </p>
+                        <a href="/dashboard/pratinjau.html?action=download" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#24389C] hover:underline mt-2">
+                            <span class="material-symbols-outlined text-sm">download</span>
+                            Ekspor & Unduh Sekarang
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white border border-slate-100 rounded-2xl p-5 flex items-start gap-4 shadow-sm">
+                    <div class="w-8 h-8 rounded-full bg-[#24389C]/10 text-[#24389C] font-bold text-xs flex items-center justify-center shrink-0">2</div>
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-sm text-slate-800">Lengkapi Dokumen di INSW</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Kunjungi portal satu pintu Indonesia National Single Window (INSW) untuk mendaftarkan dokumen ekspor wajib seperti COO/SKA atau Phytosanitary Certificate.
+                        </p>
+                        <a href="https://www.insw.go.id" target="_blank" class="inline-flex items-center gap-1 text-xs font-bold text-[#24389C] hover:underline mt-2">
+                            <span>Akses Portal INSW</span>
+                            <span class="material-symbols-outlined text-xs">open_in_new</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white border border-slate-100 rounded-2xl p-5 flex items-start gap-4 shadow-sm">
+                    <div class="w-8 h-8 rounded-full bg-[#006C49]/10 text-[#006C49] font-bold text-xs flex items-center justify-center shrink-0">3</div>
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-sm text-slate-800">Ajukan Pinjaman KUR di Bank</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Unggah proposal kelayakan LegalKilat ini ke portal KUR Online Bank Penyalur (seperti BRISPOT) untuk mempercepat verifikasi kredit dengan bunga 6% efektif.
+                        </p>
+                        <a href="https://brispot.bri.co.id" target="_blank" class="inline-flex items-center gap-1 text-xs font-bold text-[#006C49] hover:underline mt-2">
+                            <span>Ajukan di BRISPOT</span>
+                            <span class="material-symbols-outlined text-xs">open_in_new</span>
+                        </a>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Final Action -->
+            <div class="mt-8 flex gap-4">
+                <a href="/dashboard/kur.html" class="w-full py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs text-center transition">
+                    Kembali ke Form KUR
+                </a>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-6 border-t border-slate-100 text-center text-xs text-slate-400 w-full bg-white">
+            <p>© 2026 LegalKilat. Hak Cipta Dilindungi.</p>
+        </footer>
+
+    </div>
+
+    <!-- Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initLegalKilatSidebar({ role: 'user', activePath: '/dashboard/alur.html' });
+
+            // Header Logout handler
+            document.getElementById('user-logout-btn').addEventListener('click', () => {
+                showModal({
+                    title: 'Konfirmasi Keluar',
+                    message: 'Apakah Anda yakin ingin keluar dari sesi pengguna LegalKilat?',
+                    type: 'danger',
+                    confirmText: 'Ya, Keluar',
+                    onConfirm: async () => {
+                        try {
+                            const response = await fetch('/api/auth/logout', { method: 'POST' });
+                            if (response.ok) {
+                                window.location.href = '/login.html';
+                            }
+                        } catch (err) {
+                            showToast('Gagal terhubung dengan server.', 'error');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

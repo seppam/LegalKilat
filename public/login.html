@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LegalKilat - Masuk ke Sesi Perusahaan</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="/js/app-ui.js"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#24389C",
+              secondary: "#006C49",
+              surface: "#F8FAFF",
+              "on-surface": "#0B1C30",
+              "on-surface-variant": "#565E74",
+              "outline-variant": "#E2E8F0"
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        body {
+            background-color: #F8FAFF;
+            color: #0B1C30;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Container Form Login -->
+    <div class="w-full max-w-md bg-white border border-slate-100 rounded-3xl p-8 shadow-xl space-y-6">
+        
+        <!-- Header Section -->
+        <div class="text-center space-y-2">
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-indigo-50 text-[#24389C] rounded-2xl mb-2">
+                <span class="material-symbols-outlined text-3xl font-bold">gavel</span>
+            </div>
+            <h1 class="text-2xl font-bold text-[#0B1C30]">Masuk ke LegalKilat</h1>
+            <p class="text-xs text-slate-400">Masukan email atau username admin/user untuk mengakses dasbor RAG</p>
+        </div>
+
+        <!-- Inline Error Banner -->
+        <div id="error-box" class="hidden p-4 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 space-y-1">
+            <div class="flex items-center gap-1.5 font-bold">
+                <span class="material-symbols-outlined text-sm">error</span>
+                <span>Gagal Masuk</span>
+            </div>
+            <p id="error-message" class="text-slate-600">Email/Username atau password yang Anda masukkan salah.</p>
+        </div>
+
+        <!-- Form Login -->
+        <form id="login-form" class="space-y-4">
+            <div class="space-y-1">
+                <label class="block text-xs font-bold text-slate-700" for="email">Alamat Email atau Username</label>
+                <input id="email" required type="text" placeholder="Contoh: user@ekspor.com atau admin" 
+                       class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-[#24389C] focus:border-[#24389C] transition"/>
+            </div>
+
+            <div class="space-y-1">
+                <label class="block text-xs font-bold text-slate-700" for="password">Kata Sandi (Password)</label>
+                <input id="password" required type="password" placeholder="••••••••" 
+                       class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-[#24389C] focus:border-[#24389C] transition"/>
+            </div>
+
+            <button type="submit" id="submit-btn" class="w-full py-3.5 bg-[#24389C] text-white font-bold rounded-xl text-xs hover:brightness-110 active:scale-[0.98] transition flex items-center justify-center gap-2 shadow-md">
+                <span>Masuk Sekarang</span>
+                <span class="material-symbols-outlined text-sm">login</span>
+            </button>
+        </form>
+
+        <!-- Navigation Helpers -->
+        <div class="pt-4 border-t border-slate-100 text-center space-y-3">
+            <p class="text-xs text-slate-500">
+                Belum memiliki akun? <a href="/register.html" class="text-[#24389C] font-semibold hover:underline">Daftar Akun Baru</a>
+            </p>
+            <a href="/" class="text-xs text-slate-400 hover:text-[#24389C] transition flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                Kembali ke Beranda
+            </a>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const identifierVal = document.getElementById('email').value.trim();
+            const passwordVal = document.getElementById('password').value;
+            const errorBox = document.getElementById('error-box');
+            const errorMsg = document.getElementById('error-message');
+            const submitBtn = document.getElementById('submit-btn');
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Memproses Masuk...';
+            errorBox.classList.add('hidden');
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: identifierVal,
+                        username: identifierVal,
+                        password: passwordVal
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showToast('Berhasil masuk! Mengalihkan...', 'success');
+                    setTimeout(() => {
+                        if (data.role === 'admin') {
+                            window.location.href = '/admin/ingestion.html';
+                        } else {
+                            window.location.href = '/dashboard/index.html';
+                        }
+                    }, 600);
+                } else {
+                    errorMsg.textContent = data.message || 'Email/Username atau Password salah.';
+                    errorBox.classList.remove('hidden');
+                    showToast(data.message || 'Email/Username atau Password salah.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>Masuk Sekarang</span><span class="material-symbols-outlined text-sm">login</span>';
+                }
+            } catch (err) {
+                console.error(err);
+                errorMsg.textContent = 'Gagal tersambung dengan server.';
+                errorBox.classList.remove('hidden');
+                showToast('Gagal tersambung dengan server API.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>Masuk Sekarang</span><span class="material-symbols-outlined text-sm">login</span>';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LegalKilat - Simulator RAG & Prompt Tester Admin</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="/js/app-ui.js"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#24389C",
+              secondary: "#006C49",
+              surface: "#F8FAFF",
+              "on-surface": "#0B1C30",
+              "on-surface-variant": "#565E74",
+              "outline-variant": "#E2E8F0"
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        body {
+            background-color: #F8FAFF;
+            color: #0B1C30;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex">
+
+    <!-- Unified Collapsible Left Sidebar (Admin Role) -->
+    <div id="sidebar-container" class="shrink-0 sticky top-0 h-screen z-50"></div>
+
+    <!-- Main Content Outer Wrapper -->
+    <div class="flex-grow flex flex-col min-h-screen overflow-x-hidden">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-100 px-8 py-4 flex justify-between items-center h-16 shadow-xs sticky top-0 z-40">
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-slate-800">Simulator & Prompt Engineering Studio</span>
+                <span class="text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200/60 px-2.5 py-0.5 rounded-full">
+                    ADMIN MODE
+                </span>
+            </div>
+            <button id="admin-logout-btn" class="text-xs font-bold text-red-600 hover:text-red-800 transition flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">logout</span>
+                Keluar Admin
+            </button>
+        </header>
+
+        <!-- Dashboard Body -->
+        <div class="p-8 flex-grow space-y-6">
+            <!-- Hero Header -->
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800">Simulator Grounding & Prompt Tester</h3>
+                    <p class="text-xs text-slate-400 mt-1">Uji retrieval pencarian semantik hybrid dan evaluasi respons AI secara real-time.</p>
+                </div>
+                <div class="bg-indigo-50 text-[#24389C] border border-indigo-200 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-xs">psychology</span>
+                    RAG Orchestrator Ready
+                </div>
+            </div>
+
+            <!-- Grid Simulator (Left: Form Input, Right: Output Console) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Left: Form Controls (5 cols) -->
+                <div class="lg:col-span-5 space-y-6">
+                    <form id="simulator-form" class="bg-white border border-slate-100 rounded-2xl p-6 space-y-5 shadow-sm">
+                        <h4 class="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[#24389C]">tune</span>
+                            <span>Parameter Simulasi RAG</span>
+                        </h4>
+
+                        <!-- Query Input -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">
+                                Kueri Pengguna (User Query Prompt) <span class="text-red-500">*</span>
+                            </label>
+                            <input id="sim-query" required type="text" 
+                                   value="Berapa bunga KUR Mikro Mandiri & BRI?" 
+                                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:ring-2 focus:ring-[#24389C] focus:border-[#24389C]"/>
+                        </div>
+
+                        <!-- System Prompt Template -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">
+                                System Prompt Template <span class="text-red-500">*</span>
+                            </label>
+                            <textarea id="sim-prompt" rows="5" required 
+                                      class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-[11px] font-mono leading-relaxed text-slate-800 focus:ring-2 focus:ring-[#24389C] focus:border-[#24389C]">Anda adalah Asisten Hukum LegalKilat. Jawab pertanyaan pengguna HANYA berdasarkan konteks hukum resmi berikut:
+---
+{{GROUNDING_DATA}}
+---
+Kueri Pengguna: {{USER_QUERY}}
+Jawab secara singkat, formal, dan presisi tanpa karangan halusinasi.</textarea>
+                        </div>
+
+                        <!-- Top-K Slider -->
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between items-center text-xs font-bold text-slate-700">
+                                <span>Batas Chunk (Top-K Retrieval):</span>
+                                <span id="top-k-val" class="text-[#24389C]">3 Chunks</span>
+                            </div>
+                            <input id="sim-topk" type="range" min="1" max="5" value="3" 
+                                   class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#24389C]"/>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" id="simulate-btn" class="w-full py-3 bg-[#24389C] text-white font-bold rounded-xl text-xs hover:brightness-110 active:scale-[0.98] transition flex items-center justify-center gap-2 shadow-md">
+                            <span>Jalankan Simulasi Grounding</span>
+                            <span class="material-symbols-outlined text-sm">play_arrow</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right: Output Console (7 cols) -->
+                <div class="lg:col-span-7 space-y-6">
+                    
+                    <!-- Safety Alert Box (Hidden by default) -->
+                    <div id="sec-warning" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 flex items-start gap-2 animate-bounce">
+                        <span class="material-symbols-outlined text-amber-600 shrink-0">warning</span>
+                        <div>
+                            <strong class="font-bold block">Peringatan Keamanan RAG:</strong>
+                            <span>Kueri pengguna terdeteksi mencoba memanipulasi informasi bunga KUR di luar batas legal RAG (6%). Sesi dilindungi.</span>
+                        </div>
+                    </div>
+
+                    <!-- Output 1: Retrieved Chunks -->
+                    <div class="bg-white border border-slate-100 rounded-2xl p-6 space-y-4 shadow-sm">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                            <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[#006C49]">dataset</span>
+                                <span>Hasil Potongan Konteks Terambil (Retrieved Chunks)</span>
+                            </h4>
+                        </div>
+                        <div id="retrieved-container" class="space-y-3 text-xs">
+                            <p class="italic text-slate-400">Tekan tombol "Jalankan Simulasi Grounding" untuk melihat hasil pencarian semantik hybrid.</p>
+                        </div>
+                    </div>
+
+                    <!-- Output 2: Compiled AI Response -->
+                    <div class="bg-white border border-slate-100 rounded-2xl p-6 space-y-4 shadow-sm">
+                        <h4 class="text-sm font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-indigo-600">robot_2</span>
+                            <span>Keluaran Teks AI (Grounded Output)</span>
+                        </h4>
+                        <div id="ai-container" class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-xs leading-relaxed font-sans text-slate-700">
+                            <p class="italic text-slate-400">Hasil estimasi respons AI akan dirender di sini...</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="py-4 border-t border-slate-100 text-center text-xs text-slate-400 bg-white">
+            <p>© 2026 LegalKilat Control Panel. Hak Cipta Dilindungi.</p>
+        </footer>
+    </div>
+
+    <!-- Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initLegalKilatSidebar({ role: 'admin', activePath: '/admin/simulator.html' });
+
+            const topkSlider = document.getElementById('sim-topk');
+            const topkValDisplay = document.getElementById('top-k-val');
+            topkSlider.addEventListener('input', (e) => {
+                topkValDisplay.textContent = `${e.target.value} Chunks`;
+            });
+
+            const simForm = document.getElementById('simulator-form');
+            const simulateBtn = document.getElementById('simulate-btn');
+            const retrievedContainer = document.getElementById('retrieved-container');
+            const aiContainer = document.getElementById('ai-container');
+            const secWarning = document.getElementById('sec-warning');
+
+            simForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const queryVal = document.getElementById('sim-query').value;
+                const promptVal = document.getElementById('sim-prompt').value;
+                const topKVal = parseInt(topkSlider.value);
+
+                simulateBtn.disabled = true;
+                simulateBtn.innerHTML = 'Memproses Retrieval...';
+                secWarning.classList.add('hidden');
+
+                try {
+                    const response = await fetch('/api/simulasi-rag', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            question: queryVal,
+                            prompt: promptVal,
+                            topK: topKVal
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (response.ok && data.success) {
+                        if (data.warning) {
+                            secWarning.classList.remove('hidden');
+                        }
+
+                        retrievedContainer.innerHTML = '';
+                        if (data.retrieved && data.retrieved.length > 0) {
+                            data.retrieved.forEach((c, idx) => {
+                                const chunkCard = document.createElement('div');
+                                chunkCard.className = 'p-3 bg-slate-50 border border-slate-100 rounded-lg space-y-1';
+                                chunkCard.innerHTML = `
+                                    <div class="flex justify-between items-center border-b border-slate-200/50 pb-1">
+                                        <span class="font-bold text-[#24389C]">Potongan #${idx + 1} (${c.id})</span>
+                                        <span class="bg-[#006C49]/10 text-[#006C49] px-2 py-0.5 rounded-full font-bold">Skor: ${c.score.toFixed(4)}</span>
+                                    </div>
+                                    <p class="leading-relaxed text-[10px] text-slate-600 mt-1">${c.text}</p>
+                                    <div class="text-[8px] text-slate-400 mt-1 flex justify-between">
+                                        <span>Sumber: ${c.source}</span>
+                                        <span>Semantic Score: ${c.denseScore.toFixed(4)} | Keyword Score: ${c.sparseScore.toFixed(4)}</span>
+                                    </div>
+                                `;
+                                retrievedContainer.appendChild(chunkCard);
+                            });
+                        } else {
+                            retrievedContainer.innerHTML = '<p class="italic text-slate-400">Tidak ada dokumen yang berhasil di-retrieve.</p>';
+                        }
+
+                        aiContainer.innerHTML = `<p class="leading-relaxed text-slate-800">${data.aiResponse}</p>`;
+                        showToast('Simulasi Grounding RAG berhasil dijalankan.', 'success');
+                    } else {
+                        showToast('Gagal menjalankan simulasi: ' + (data.message || 'Error tidak diketahui.'), 'error');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    showToast('Gagal terhubung dengan server API.', 'error');
+                } finally {
+                    simulateBtn.disabled = false;
+                    simulateBtn.innerHTML = '<span>Jalankan Simulasi Grounding</span><span class="material-symbols-outlined text-sm">play_arrow</span>';
+                }
+            });
+
+            document.getElementById('admin-logout-btn').addEventListener('click', () => {
+                showModal({
+                    title: 'Konfirmasi Keluar Admin',
+                    message: 'Apakah Anda yakin ingin keluar dari Panel Kontrol Admin LegalKilat?',
+                    type: 'danger',
+                    confirmText: 'Ya, Keluar',
+                    onConfirm: async () => {
+                        try {
+                            const response = await fetch('/api/auth/logout', { method: 'POST' });
+                            if (response.ok) {
+                                window.location.href = '/login.html';
+                            }
+                        } catch (err) {
+                            showToast('Gagal terhubung dengan server.', 'error');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

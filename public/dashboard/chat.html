@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LegalKilat - Asisten AI Chatbot KUR & Ekspor</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="/js/app-ui.js"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#24389C",
+              secondary: "#006C49",
+              surface: "#F8FAFF",
+              "on-surface": "#0B1C30",
+              "on-surface-variant": "#565E74",
+              "outline-variant": "#E2E8F0"
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        body {
+            background-color: #F8FAFF;
+            color: #0B1C30;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chat-bubble-user {
+            background-color: #24389C;
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+        }
+        .chat-bubble-ai {
+            background-color: white;
+            color: #0B1C30;
+            border: 1px solid #E2E8F0;
+            border-radius: 18px 18px 18px 4px;
+        }
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex">
+
+    <!-- Unified Collapsible Left Sidebar -->
+    <div id="sidebar-container" class="shrink-0 sticky top-0 h-screen z-50"></div>
+
+    <!-- Main Outer Layout Wrapper -->
+    <div class="flex-grow flex flex-col min-h-screen overflow-x-hidden">
+
+        <!-- Top AppBar -->
+        <header class="bg-white border-b border-slate-100 shadow-xs sticky top-0 z-40 flex items-center justify-between px-6 h-16 w-full">
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-slate-800">LegalKilat Platform</span>
+                <span class="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200/60 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    AI Grounded Chatbot
+                </span>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button id="user-logout-btn" class="text-xs font-bold text-red-600 hover:text-red-800 transition flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    Keluar Sesi
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <main class="flex-grow container mx-auto max-w-4xl px-4 py-6 flex flex-col justify-between" style="height: calc(100vh - 110px);">
+            
+            <!-- Chat Header Card -->
+            <div class="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm flex items-center justify-between shrink-0 mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#24389C] to-[#006C49] text-white flex items-center justify-center font-bold shadow-md">
+                        <span class="material-symbols-outlined text-xl">smart_toy</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm text-slate-800">Asisten Hukum AI LegalKilat</h3>
+                        <p class="text-[11px] text-slate-400">Tanya Jawab Real-Time Terhubung Basis Data Hukum Resmi</p>
+                    </div>
+                </div>
+                <div class="bg-green-50 text-[#006C49] px-3 py-1 rounded-full text-[10px] font-bold border border-green-200/50 flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 bg-[#006C49] rounded-full animate-pulse"></span>
+                    RAG Engine Active
+                </div>
+            </div>
+
+            <!-- Messages Area Container -->
+            <div id="chat-container" class="flex-grow bg-slate-50/50 border border-slate-100 rounded-2xl p-4 sm:p-6 overflow-y-auto space-y-4 mb-4 custom-scrollbar shadow-inner">
+                
+                <!-- Welcome Initial Message -->
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-[#24389C] text-white flex items-center justify-center shrink-0 mt-1">
+                        <span class="material-symbols-outlined text-sm">smart_toy</span>
+                    </div>
+                    <div class="chat-bubble-ai p-4 text-xs space-y-2 max-w-[85%] shadow-sm">
+                        <p class="font-bold text-[#24389C]">Halo! Saya Asisten AI Hukum LegalKilat.</p>
+                        <p class="text-slate-600 leading-relaxed">
+                            Saya siap membantu menjawab pertanyaan Anda seputar aturan bunga pinjaman KUR 6%, syarat plafon usaha, klasifikasi Kode HS ekspor, serta dokumen kepabeanan wajib untuk usaha Anda.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Dynamic Messages inserted here -->
+            </div>
+
+            <!-- Quick Prompt Chips -->
+            <div class="shrink-0 mb-3 overflow-x-auto py-1 flex items-center gap-2 text-xs no-scrollbar">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wide shrink-0">Contoh Prompt:</span>
+                <button class="quick-chip bg-white border border-slate-200 hover:border-[#24389C] hover:text-[#24389C] text-slate-600 px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 transition shadow-sm">
+                    Apa syarat KUR Super Mikro?
+                </button>
+                <button class="quick-chip bg-white border border-slate-200 hover:border-[#24389C] hover:text-[#24389C] text-slate-600 px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 transition shadow-sm">
+                    Berapa bunga KUR Mikro Mandiri & BRI?
+                </button>
+                <button class="quick-chip bg-white border border-slate-200 hover:border-[#24389C] hover:text-[#24389C] text-slate-600 px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 transition shadow-sm">
+                    Bagaimana cara dapat Surat SKA/COO ekspor batik?
+                </button>
+                <button class="quick-chip bg-white border border-slate-200 hover:border-[#24389C] hover:text-[#24389C] text-slate-600 px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 transition shadow-sm">
+                    Apakah kerajinan kayu wajib Sertifikat V-Legal (SVLK)?
+                </button>
+            </div>
+
+            <!-- Input Box Form -->
+            <form id="chat-form" class="bg-white border border-slate-200 rounded-2xl p-2 flex items-center gap-2 shadow-md shrink-0">
+                <input id="chat-input" type="text" autocomplete="off" required 
+                       placeholder="Ketik pertanyaan hukum KUR atau ekspor di sini..." 
+                       class="flex-grow px-4 py-3 bg-transparent text-xs sm:text-sm font-medium focus:outline-none text-slate-800 placeholder:text-slate-400"/>
+                <button type="submit" id="send-btn" 
+                        class="w-10 h-10 bg-[#24389C] hover:brightness-110 text-white rounded-xl flex items-center justify-center shrink-0 transition shadow">
+                    <span class="material-symbols-outlined text-lg">send</span>
+                </button>
+            </form>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-3 border-t border-slate-100 text-center text-xs text-slate-400 w-full bg-white shrink-0">
+            <p>© 2026 LegalKilat. Grounded on Official Legal Database.</p>
+        </footer>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initLegalKilatSidebar({ role: 'user', activePath: '/dashboard/chat.html' });
+
+            const chatContainer = document.getElementById('chat-container');
+            const chatForm = document.getElementById('chat-form');
+            const chatInput = document.getElementById('chat-input');
+
+            function scrollToBottom() {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            function appendUserMessage(text) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'flex justify-end';
+                wrapper.innerHTML = `
+                    <div class="chat-bubble-user p-3.5 text-xs max-w-[80%] leading-relaxed shadow-sm font-medium">
+                        ${text}
+                    </div>
+                `;
+                chatContainer.appendChild(wrapper);
+                scrollToBottom();
+            }
+
+            function appendTypingIndicator() {
+                const wrapper = document.createElement('div');
+                wrapper.id = 'typing-indicator';
+                wrapper.className = 'flex items-start gap-3';
+                wrapper.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-[#24389C] text-white flex items-center justify-center shrink-0 mt-1">
+                        <span class="material-symbols-outlined text-sm">smart_toy</span>
+                    </div>
+                    <div class="chat-bubble-ai p-3.5 text-xs shadow-sm flex items-center gap-1.5">
+                        <span class="w-2 h-2 bg-indigo-500 rounded-full typing-dot"></span>
+                        <span class="w-2 h-2 bg-indigo-500 rounded-full typing-dot"></span>
+                        <span class="w-2 h-2 bg-indigo-500 rounded-full typing-dot"></span>
+                    </div>
+                `;
+                chatContainer.appendChild(wrapper);
+                scrollToBottom();
+            }
+
+            function removeTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) indicator.remove();
+            }
+
+            /**
+             * Merender pesan AI ke dalam area chat.
+             * @param {string} answerText - Teks jawaban dari server
+             * @param {Array} sources     - Array sumber grounding RAG
+             * @param {boolean} outOfScope - Jika true, sembunyikan kotak "Sumber Grounding RAG"
+             */
+            function appendAIMessage(answerText, sources = [], outOfScope = false) {
+                removeTypingIndicator();
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'flex items-start gap-3';
+
+                // [GUARDRAIL] Sembunyikan kotak sumber grounding jika pertanyaan di luar lingkup
+                let sourcesHTML = '';
+                if (!outOfScope && sources && sources.length > 0) {
+                    sourcesHTML = `
+                        <div class="mt-2.5 pt-2 border-t border-slate-100 text-[10px] text-slate-400 space-y-1">
+                            <span class="font-bold text-slate-500 block">Sumber Grounding RAG:</span>
+                            ${sources.map(s => `<div class="bg-slate-50 p-1.5 rounded border border-slate-100 text-slate-600 font-mono text-[9px]">${s.text}</div>`).join('')}
+                        </div>
+                    `;
+                }
+
+                wrapper.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-[#24389C] text-white flex items-center justify-center shrink-0 mt-1">
+                        <span class="material-symbols-outlined text-sm">smart_toy</span>
+                    </div>
+                    <div class="chat-bubble-ai p-4 text-xs space-y-2 max-w-[85%] leading-relaxed shadow-sm">
+                        <p class="text-slate-800 whitespace-pre-line">${answerText}</p>
+                        ${sourcesHTML}
+                    </div>
+                `;
+                chatContainer.appendChild(wrapper);
+                scrollToBottom();
+            }
+
+            async function handleSendMessage(messageText) {
+                if (!messageText.trim()) return;
+
+                appendUserMessage(messageText);
+                chatInput.value = '';
+                appendTypingIndicator();
+
+                try {
+                    const response = await fetch('/api/chat-rag', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: messageText })
+                    });
+
+                    const data = await response.json();
+                    if (response.ok && data.success) {
+                        // [GUARDRAIL] Teruskan flag outOfScope ke renderer agar sumber tidak ditampilkan
+                        appendAIMessage(data.answer, data.sources, data.outOfScope === true);
+                    } else {
+                        appendAIMessage('Mohon maaf, terjadi kendala saat memproses pertanyaan Anda: ' + (data.message || 'Error tidak diketahui.'));
+                    }
+                } catch (err) {
+                    console.error(err);
+                    appendAIMessage('Gagal terhubung dengan server RAG.');
+                    showToast('Gagal terhubung dengan server AI.', 'error');
+                }
+            }
+
+
+            chatForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                handleSendMessage(chatInput.value);
+            });
+
+            document.querySelectorAll('.quick-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    handleSendMessage(chip.textContent.trim());
+                });
+            });
+
+            // Header Logout handler
+            document.getElementById('user-logout-btn').addEventListener('click', () => {
+                showModal({
+                    title: 'Konfirmasi Keluar',
+                    message: 'Apakah Anda yakin ingin keluar dari sesi pengguna LegalKilat?',
+                    type: 'danger',
+                    confirmText: 'Ya, Keluar',
+                    onConfirm: async () => {
+                        try {
+                            const response = await fetch('/api/auth/logout', { method: 'POST' });
+                            if (response.ok) {
+                                window.location.href = '/login.html';
+                            }
+                        } catch (err) {
+                            showToast('Gagal terhubung dengan server.', 'error');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

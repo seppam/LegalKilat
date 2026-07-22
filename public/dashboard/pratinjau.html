@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LegalKilat - Pratinjau Proposal Dokumen</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="/js/app-ui.js"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#24389C",
+              secondary: "#006C49",
+              surface: "#F8FAFF",
+              "on-surface": "#0B1C30",
+              "on-surface-variant": "#565E74",
+              "outline-variant": "#E2E8F0"
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        body {
+            background-color: #F8FAFF;
+            color: #0B1C30;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Wrapper scrollable untuk mencegah kertas terpotong di layar sempit */
+        .preview-wrapper {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            box-sizing: border-box;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            background: #f1f5f9;
+            border-radius: 16px;
+        }
+        /* Lock A4 document size explicitly to fix PDF cutoff */
+        #proposal-document {
+            width: 794px !important;
+            min-width: 794px !important;
+            max-width: 794px !important;
+            box-sizing: border-box !important;
+            padding: 24px !important;
+            margin: 0 !important;
+            background: white !important;
+            flex-shrink: 0;
+        }
+        .pdf-table {
+            table-layout: fixed !important;
+            width: 100% !important;
+            word-wrap: break-word !important;
+        }
+        @media print {
+            .no-print, header, footer, #sidebar-container, button, select {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                margin: 0 !important;
+            }
+            #proposal-document {
+                box-shadow: none !important;
+                margin: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex">
+
+    <!-- Unified Collapsible Left Sidebar -->
+    <div id="sidebar-container" class="shrink-0 sticky top-0 h-screen z-50 no-print"></div>
+
+    <!-- Main Outer Layout Wrapper -->
+    <div class="flex-grow flex flex-col min-h-screen overflow-x-hidden">
+
+        <!-- Top AppBar -->
+        <header class="bg-white border-b border-slate-100 shadow-xs sticky top-0 z-40 flex items-center justify-between px-6 h-16 w-full no-print">
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-slate-800">LegalKilat Platform</span>
+                <span class="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200/60 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    Pratinjau Proposal A4
+                </span>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button id="user-logout-btn" class="text-xs font-bold text-red-600 hover:text-red-800 transition flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    Keluar Sesi
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Left Column: Controls & Guidelines (4 cols) -->
+                <section class="lg:col-span-4 space-y-6 no-print">
+                    <div class="bg-white rounded-2xl border border-slate-100 p-6 space-y-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-slate-800 border-b border-slate-100 pb-3">Status Kepatuhan</h3>
+                        
+                        <div class="bg-[#006C49]/10 px-4 py-3 rounded-xl flex items-center gap-3" id="compliance-badge-container">
+                            <span class="material-symbols-outlined text-[#006C49] font-bold" id="compliance-icon">check_circle</span>
+                            <span class="text-sm font-bold text-[#006C49]" id="compliant-badge">Memeriksa Kepatuhan...</span>
+                        </div>
+
+                        <div class="space-y-1">
+                            <span class="text-xs text-slate-400 font-bold block">Status RAG Engine</span>
+                            <p class="text-sm text-slate-700 font-semibold" id="compliance-status">Menghubungkan ke database...</p>
+                        </div>
+
+                        <div class="space-y-3 pt-2">
+                            <span class="text-xs text-slate-400 font-bold block">Pilihan Tenor Angsuran</span>
+                            <select id="tenor-select" class="w-full appearance-none px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#24389C] focus:border-[#24389C] transition-all text-sm font-semibold text-slate-700">
+                                <option value="12">12 Bulan</option>
+                                <option value="24" selected>24 Bulan (Default)</option>
+                                <option value="36">36 Bulan</option>
+                                <option value="48">48 Bulan</option>
+                                <option value="60">60 Bulan</option>
+                            </select>
+                        </div>
+
+                        <!-- External Actions -->
+                        <div class="pt-4 border-t border-slate-100 space-y-3">
+                            <span class="text-xs text-slate-400 font-bold block">Saluran Pengajuan Resmi</span>
+                            <a href="https://www.insw.go.id" target="_blank" class="w-full py-2.5 px-4 bg-slate-50 border border-slate-200 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-100 transition flex items-center justify-between">
+                                <span>Portal Satu Pintu INSW</span>
+                                <span class="material-symbols-outlined text-sm">open_in_new</span>
+                            </a>
+                            <a href="https://brispot.bri.co.id" target="_blank" class="w-full py-2.5 px-4 bg-slate-50 border border-slate-200 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-100 transition flex items-center justify-between">
+                                <span>Pengajuan KUR Online (Brispot)</span>
+                                <span class="material-symbols-outlined text-sm">open_in_new</span>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Right Column: Document Preview (8 cols) -->
+                <section class="lg:col-span-8 space-y-6">
+                    <!-- A4 Outer Wrapper — preview-wrapper memastikan scroll simetris di layar sempit -->
+                    <div class="preview-wrapper shadow-inner" id="document-render-area">
+                        <!-- Locked A4 Document Container (794px width explicit) -->
+                        <article id="proposal-document" class="shadow-lg text-[#0B1C30] flex flex-col justify-between text-xs leading-relaxed">
+                            
+                            <!-- Letterhead -->
+                            <div>
+                                <div class="flex justify-between items-start border-b-4 border-[#24389C] pb-6 mb-6">
+                                    <div>
+                                        <h2 class="font-extrabold text-lg tracking-tight text-[#24389C] uppercase">Proposal Kemitraan KUR Ekspor</h2>
+                                        <p class="text-[10px] text-slate-400 mt-0.5 italic font-medium">Hasil Analisis Grounding RAG - LegalKilat</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-[10px]" id="doc-id">ID DOKUMEN: LK-2026-PENDING</p>
+                                        <p class="text-[9px] text-slate-400" id="doc-date">Tanggal: -</p>
+                                    </div>
+                                </div>
+
+                                <!-- Content Sections -->
+                                <div class="space-y-5">
+                                    <!-- Section 1 -->
+                                    <section>
+                                        <h4 class="font-bold text-xs text-[#24389C] border-l-4 border-[#24389C] pl-2 mb-2">I. Profil Usaha & Mitra</h4>
+                                        <div class="grid grid-cols-2 gap-4 bg-slate-50 p-3 rounded-lg">
+                                            <div>
+                                                <p class="text-[9px] text-slate-400 font-bold uppercase">Klasifikasi Sektor Usaha</p>
+                                                <p class="font-semibold text-slate-800 text-xs" id="business-type">-</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[9px] text-slate-400 font-bold uppercase">Batas Suku Bunga Legal</p>
+                                                <p class="font-semibold text-[#006C49] text-xs" id="interest-rate">6.00% per Tahun (Efektif)</p>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <!-- Section 2 -->
+                                    <section>
+                                        <h4 class="font-bold text-xs text-[#24389C] border-l-4 border-[#24389C] pl-2 mb-2">II. Proyeksi Aliran Kas Finansial (6 Bulan)</h4>
+                                        <div class="overflow-hidden border border-slate-200 rounded-lg">
+                                            <table class="w-full text-left border-collapse pdf-table">
+                                                <thead class="bg-[#24389C] text-white text-[11px]">
+                                                    <tr>
+                                                        <th class="p-2 font-bold" style="width: 50%;">Deskripsi Arus Kas</th>
+                                                        <th class="p-2 font-bold text-right" style="width: 25%;">Bulan 1-3</th>
+                                                        <th class="p-2 font-bold text-right" style="width: 25%;">Bulan 4-6</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="cashflow-body" class="divide-y divide-slate-100 text-[10px]">
+                                                    <!-- Dynamic content -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </section>
+
+                                    <!-- Section 3 -->
+                                    <section>
+                                        <h4 class="font-bold text-xs text-[#24389C] border-l-4 border-[#24389C] pl-2 mb-2">III. Skema KUR & Pembiayaan</h4>
+                                        <div class="grid grid-cols-2 gap-x-4 gap-y-1.5 py-2 border-t border-b border-slate-100 text-[11px]">
+                                            <div class="flex justify-between py-1 border-b border-dashed border-slate-100">
+                                                <span class="text-slate-500">Nominal Pengajuan:</span>
+                                                <span class="font-bold text-slate-800" id="proposal-amount">Rp -</span>
+                                            </div>
+                                            <div class="flex justify-between py-1 border-b border-dashed border-slate-100">
+                                                <span class="text-slate-500">Kategori Skema KUR:</span>
+                                                <span class="font-bold text-[#006C49]" id="kur-scheme">-</span>
+                                            </div>
+                                            <div class="flex justify-between py-1 border-b border-dashed border-slate-100 col-span-2">
+                                                <span class="text-slate-500">Ketentuan Jaminan Fisik:</span>
+                                                <span class="font-bold text-slate-800" id="collateral-info">-</span>
+                                            </div>
+                                            <div class="flex justify-between items-center py-2 px-3 bg-indigo-50/50 rounded-lg col-span-2 mt-1">
+                                                <span class="font-bold text-[#24389C]">Estimasi Angsuran Bulanan:</span>
+                                                <span class="text-xs font-extrabold text-[#24389C]" id="installment-amount">Rp -</span>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <!-- Section 4 -->
+                                    <section>
+                                        <h4 class="font-bold text-xs text-[#24389C] border-l-4 border-[#24389C] pl-2 mb-2">IV. Kepatuhan Kepabeanan (Kode HS Ekspor)</h4>
+                                        <div class="overflow-x-auto rounded border border-slate-200">
+                                            <table class="w-full text-[10px] text-left text-slate-600 pdf-table">
+                                                <thead class="bg-slate-50 text-slate-800 font-bold border-b border-slate-200">
+                                                    <tr>
+                                                        <th class="py-2 px-3" style="width: 25%;">Kode HS</th>
+                                                        <th class="py-2 px-3" style="width: 50%;">Klasifikasi Barang</th>
+                                                        <th class="py-2 px-3" style="width: 25%;">Batas Bea Keluar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="hs-code-body" class="divide-y divide-slate-100">
+                                                    <!-- Dynamic -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="mt-2 bg-slate-50 p-2.5 rounded-lg">
+                                            <p class="font-bold text-[10px] text-slate-700 mb-1">Berkas Regulasi & Sertifikasi Wajib:</p>
+                                            <ul id="docs-list" class="list-disc pl-4 space-y-0.5 text-[#0B1C30] text-[10px]">
+                                                <!-- Dynamic -->
+                                            </ul>
+                                        </div>
+                                    </section>
+
+                                    <!-- Section 5 (AI recommendation) -->
+                                    <section id="ai-recommendation-section" class="hidden">
+                                        <h4 class="font-bold text-xs text-[#24389C] border-l-4 border-[#24389C] pl-2 mb-1">V. Panduan Kepatuhan Teknis Ekspor (AI Recommended)</h4>
+                                        <div class="p-2.5 bg-indigo-50/20 border border-indigo-100/50 rounded-lg text-slate-700 text-[10px] leading-relaxed italic" id="ai-recommendation-text">
+                                            <!-- Dynamic -->
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+
+                            <!-- Footer -->
+                            <footer class="pt-4 border-t border-slate-200 text-[8px] text-slate-400 text-justify leading-relaxed mt-4">
+                                Dokumen analisis kepatuhan hukum dan proposal pembiayaan ekspor ini dirilis secara otomatis oleh LegalKilat RAG Engine berdasarkan validasi regulasi resmi LegalKilat. Seluruh data keuangan disinkronkan secara konsisten dengan rumus anuitas bunga 6% efektif per tahun.
+                            </footer>
+                        </article>
+                    </div>
+
+                    <!-- Bottom Button Actions -->
+                    <div class="flex gap-4 no-print">
+                        <button id="download-pdf-btn" class="flex-1 py-4 bg-[#24389C] hover:brightness-110 active:scale-[0.98] text-white rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-md">
+                            <span class="material-symbols-outlined">download</span>
+                            Unduh PDF Proposal Resmi
+                        </button>
+                        <a href="/dashboard/alur.html" class="py-4 px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold transition-all flex items-center justify-center">
+                            Lihat Panduan Alur
+                        </a>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-6 border-t border-slate-100 text-center text-xs text-slate-400 w-full bg-white no-print">
+            <p>© 2026 LegalKilat. Hak Cipta Dilindungi.</p>
+        </footer>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        const formatRupiah = (val) => {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                maximumFractionDigits: 0
+            }).format(val);
+        };
+
+        let randId = Math.floor(10000 + Math.random() * 90000);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            initLegalKilatSidebar({ role: 'user', activePath: '/dashboard/pratinjau.html' });
+
+            document.getElementById('doc-id').textContent = `ID DOKUMEN: LK-2026-${randId}`;
+
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('doc-date').textContent = `Tanggal: ${now.toLocaleDateString('id-ID', options)}`;
+
+            let plafonVal = 45000000;
+            let kbliVal = '01240';
+            let simulationData = [];
+
+            try {
+                const response = await fetch('/api/get-current-proposal');
+                const data = await response.json();
+
+                if (data.success && data.validation) {
+                    const val = data.validation;
+                    simulationData = data.simulation;
+                    plafonVal = parseFloat(data.plafon);
+                    kbliVal = data.kbli;
+
+                    document.getElementById('business-type').textContent = val.kbli_desc;
+                    document.getElementById('proposal-amount').textContent = formatRupiah(plafonVal);
+                    document.getElementById('kur-scheme').textContent = val.skema;
+                    document.getElementById('collateral-info').textContent = val.agunan;
+                    document.getElementById('interest-rate').textContent = val.bunga;
+
+                    const badge = document.getElementById('compliant-badge');
+                    const badgeContainer = document.getElementById('compliance-badge-container');
+                    const badgeIcon = document.getElementById('compliance-icon');
+
+                    if (val.compliant) {
+                        badge.textContent = `Mitra Terverifikasi (${val.bunga})`;
+                        document.getElementById('compliance-status').textContent = 'Proposal Kepatuhan KUR Disetujui (Grounded)';
+                    } else {
+                        badge.textContent = 'Tidak Sesuai Regulasi';
+                        badgeContainer.classList.replace('bg-[#006C49]/10', 'bg-red-50');
+                        badgeContainer.classList.replace('text-[#006C49]', 'text-red-700');
+                        badgeIcon.classList.replace('text-[#006C49]', 'text-red-700');
+                        badgeIcon.textContent = 'warning';
+                        document.getElementById('compliance-status').textContent = 'Ditolak: ' + val.errors.join(', ');
+                        document.getElementById('compliance-status').classList.add('text-red-600');
+                    }
+
+                    const hsBody = document.getElementById('hs-code-body');
+                    hsBody.innerHTML = '';
+                    val.hs_codes.forEach(hs => {
+                        const row = document.createElement('tr');
+                        row.className = 'border-b border-slate-100';
+                        row.innerHTML = `
+                            <td class="py-2 px-3 font-mono font-bold text-[#24389C]">${hs.code}</td>
+                            <td class="py-2 px-3">${hs.desc}</td>
+                            <td class="py-2 px-3 text-[#006C49] font-bold">${hs.duty}</td>
+                        `;
+                        hsBody.appendChild(row);
+                    });
+
+                    const docsList = document.getElementById('docs-list');
+                    docsList.innerHTML = '';
+                    val.dokumen_wajib.forEach(doc => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<strong>${doc.nama}:</strong> ${doc.desc}`;
+                        docsList.appendChild(li);
+                    });
+
+                    if (val.rekomendasi_ai) {
+                        document.getElementById('ai-recommendation-section').classList.remove('hidden');
+                        document.getElementById('ai-recommendation-text').innerHTML = val.rekomendasi_ai;
+                    }
+
+                    const tenorSelect = document.getElementById('tenor-select');
+
+                    const calculateAndRenderFinances = (selectedTenor) => {
+                        let installment = 0;
+                        const sim = simulationData.find(s => s.tenor === selectedTenor);
+                        if (sim) {
+                            installment = sim.angsuran;
+                        } else {
+                            const ratePerYear = 0.06;
+                            const r = ratePerYear / 12;
+                            const M = plafonVal * (r * Math.pow(1 + r, selectedTenor)) / (Math.pow(1 + r, selectedTenor) - 1);
+                            installment = Math.round(M);
+                        }
+
+                        document.getElementById('installment-amount').textContent = formatRupiah(installment);
+
+                        let factor = 0.25;
+                        if (kbliVal === '01240') factor = 0.3;
+                        else if (kbliVal === '14111') factor = 0.28;
+                        else if (kbliVal === '10212') factor = 0.35;
+                        else if (kbliVal === '15201') factor = 0.27;
+
+                        const p1 = plafonVal * factor;
+                        const p2 = plafonVal * (factor + 0.05);
+                        const c1 = plafonVal * (factor * 0.5);
+                        const c2 = c1;
+
+                        const totalInstallmentPeriod = installment * 3;
+                        const net1 = p1 - c1 - totalInstallmentPeriod;
+                        const net2 = p2 - c2 - totalInstallmentPeriod;
+
+                        const cfBody = document.getElementById('cashflow-body');
+                        cfBody.innerHTML = `
+                            <tr class="border-b border-slate-100">
+                                <td class="p-2">Estimasi Pendapatan Kotor</td>
+                                <td class="p-2 text-right">${formatRupiah(p1)}</td>
+                                <td class="p-2 text-right">${formatRupiah(p2)}</td>
+                            </tr>
+                            <tr class="border-b border-slate-100">
+                                <td class="p-2 text-red-500">Estimasi Biaya Operasional</td>
+                                <td class="p-2 text-right text-red-500">(${formatRupiah(c1)})</td>
+                                <td class="p-2 text-right text-red-500">(${formatRupiah(c2)})</td>
+                            </tr>
+                            <tr class="border-b border-slate-100">
+                                <td class="p-2 text-red-600 font-semibold">Angsuran Pokok & Bunga KUR (3 Bln)</td>
+                                <td class="p-2 text-right text-red-600 font-semibold">(${formatRupiah(totalInstallmentPeriod)})</td>
+                                <td class="p-2 text-right text-red-600 font-semibold">(${formatRupiah(totalInstallmentPeriod)})</td>
+                            </tr>
+                            <tr class="font-extrabold bg-slate-50 text-[#006C49]">
+                                <td class="p-2">Aliran Kas Bersih (Nett)</td>
+                                <td class="p-2 text-right">${formatRupiah(net1)}</td>
+                                <td class="p-2 text-right">${formatRupiah(net2)}</td>
+                            </tr>
+                        `;
+                    };
+
+                    calculateAndRenderFinances(parseInt(tenorSelect.value));
+
+                    tenorSelect.addEventListener('change', (e) => {
+                        calculateAndRenderFinances(parseInt(e.target.value));
+                    });
+
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get('action') === 'download') {
+                        setTimeout(() => {
+                            document.getElementById('download-pdf-btn').click();
+                        }, 1200);
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('compliant-badge').textContent = 'Koneksi Server Gagal';
+                showToast('Gagal memuat proposal dari server.', 'error');
+            }
+
+            // PDF Download Handler
+            const downloadBtn = document.getElementById('download-pdf-btn');
+            downloadBtn.addEventListener('click', () => {
+                const originalContent = downloadBtn.innerHTML;
+                downloadBtn.innerHTML = 'Mengekspor PDF...';
+                downloadBtn.disabled = true;
+
+                window.scrollTo({ top: 0, behavior: 'instant' });
+
+                setTimeout(() => {
+                    const element = document.getElementById('proposal-document');
+                    if (!element) {
+                        showToast('Gagal menemukan elemen dokumen untuk dicetak.', 'error');
+                        downloadBtn.innerHTML = originalContent;
+                        downloadBtn.disabled = false;
+                        return;
+                    }
+                    const opt = {
+                        margin:       [8, 8, 8, 8],
+                        filename:     `Proposal_LegalKilat_${randId}.pdf`,
+                        image:        { type: 'jpeg', quality: 0.98 },
+                        html2canvas:  { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0 },
+                        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    };
+
+                    html2pdf().set(opt).from(element).save().then(() => {
+                        showToast('PDF Proposal Resmi berhasil diunduh.', 'success');
+                        downloadBtn.innerHTML = 'Cetak Berhasil';
+                        setTimeout(() => {
+                            downloadBtn.innerHTML = originalContent;
+                            downloadBtn.disabled = false;
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('[PDF] Error generating proposal PDF:', err);
+                        showToast('Gagal mengunduh PDF proposal.', 'error');
+                        downloadBtn.innerHTML = originalContent;
+                        downloadBtn.disabled = false;
+                    });
+                }, 300);
+            });
+
+            // Header Logout handler
+            document.getElementById('user-logout-btn').addEventListener('click', () => {
+                showModal({
+                    title: 'Konfirmasi Keluar',
+                    message: 'Apakah Anda yakin ingin keluar dari sesi pengguna LegalKilat?',
+                    type: 'danger',
+                    confirmText: 'Ya, Keluar',
+                    onConfirm: async () => {
+                        try {
+                            const response = await fetch('/api/auth/logout', { method: 'POST' });
+                            if (response.ok) {
+                                window.location.href = '/login.html';
+                            }
+                        } catch (err) {
+                            showToast('Gagal terhubung dengan server.', 'error');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

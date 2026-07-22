@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LegalKilat - Kuesioner Proposal KUR</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="/js/app-ui.js"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#24389C",
+              secondary: "#006C49",
+              surface: "#F8FAFF",
+              "on-surface": "#0B1C30",
+              "on-surface-variant": "#565E74",
+              "outline-variant": "#E2E8F0"
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        body {
+            background-color: #F8FAFF;
+            color: #0B1C30;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex">
+
+    <!-- Unified Collapsible Left Sidebar -->
+    <div id="sidebar-container" class="shrink-0 sticky top-0 h-screen z-50"></div>
+
+    <!-- Main Outer Layout Wrapper -->
+    <div class="flex-grow flex flex-col min-h-screen overflow-x-hidden">
+
+        <!-- Top AppBar -->
+        <header class="bg-white border-b border-slate-100 shadow-xs sticky top-0 z-40 flex items-center justify-between px-6 h-16 w-full">
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-slate-800">LegalKilat Platform</span>
+                <span class="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200/60 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    Kuesioner Proposal RAG
+                </span>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button id="user-logout-btn" class="text-xs font-bold text-red-600 hover:text-red-800 transition flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    Keluar Sesi
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto max-w-lg px-6 py-10">
+            <!-- Header Section -->
+            <section class="mb-8 space-y-3">
+                <h2 class="text-2xl font-bold text-[#0B1C30]">Formulir Kuesioner Proposal KUR & Ekspor</h2>
+                <div class="flex gap-3 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
+                    <span class="material-symbols-outlined text-[#24389C] shrink-0">info</span>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Data kuesioner ini diproses langsung oleh modul RAG untuk menghasilkan proposal hukum ekspor bebas halusinasi dengan validasi bunga KUR 6% efektif.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Inline Error Banner -->
+            <div id="proposal-error-banner" class="hidden mb-6"></div>
+
+            <!-- Form Card -->
+            <form id="proposal-form" class="space-y-6">
+                <div class="bg-white rounded-2xl border border-slate-100 p-6 space-y-6 shadow-sm">
+                    <h3 class="text-lg font-bold border-b border-slate-100 pb-3 text-slate-800">Detail Rencana Pembiayaan Usaha</h3>
+                    
+                    <!-- Plafon Pinjaman -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-700">
+                            Nominal Plafon Pengajuan (Rupiah) <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative flex items-center group">
+                            <span class="absolute left-4 text-sm font-bold text-slate-400 select-none">Rp</span>
+                            <input id="plafon" required class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#24389C] focus:border-[#24389C] transition-all text-sm font-semibold" 
+                                   placeholder="Contoh: 45000000" type="number"/>
+                        </div>
+                        
+                        <!-- Client-side Error Warning Container -->
+                        <div id="plafon-error-msg" class="hidden text-xs font-semibold text-red-600 flex items-center gap-1 mt-1 bg-red-50 p-2.5 rounded-lg border border-red-200">
+                            <span class="material-symbols-outlined text-sm shrink-0">error</span>
+                            <span id="plafon-error-text">Nominal plafon harus lebih besar dari Rp 0 dan tidak melebihi Rp 500.000.000.</span>
+                        </div>
+
+                        <!-- Keterangan KUR Skema Panduan -->
+                        <div class="p-3 bg-slate-50 rounded-lg text-[10px] text-slate-500 space-y-1">
+                            <p class="font-bold text-slate-700">Panduan Skema Plafon KUR:</p>
+                            <ul class="list-disc pl-4 space-y-0.5">
+                                <li><span class="font-semibold text-slate-600">Super Mikro:</span> Plafon s.d Rp 10 Juta (Bebas agunan tambahan).</li>
+                                <li><span class="font-semibold text-slate-600">Mikro:</span> Plafon > Rp 10 Juta s.d Rp 50 Juta (Bebas jaminan fisik).</li>
+                                <li><span class="font-semibold text-slate-600">Kecil:</span> Plafon > Rp 50 Juta s.d Rp 500 Juta (Agunan sesuai kebijakan bank).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Sektor Usaha (8 KBLIs with Single Arrow Custom Fix) -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-700">
+                            Komoditas Ekspor & Sektor Usaha (KBLI) <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <select id="sektor-usaha" required 
+                                    style="-webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: none;" 
+                                    class="w-full appearance-none bg-none px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#24389C] focus:border-[#24389C] transition-all text-sm font-semibold text-slate-700 pr-10">
+                                <option disabled selected value="">-- Pilih Sektor Komoditas Ekspor --</option>
+                                <option value="01240">01240 - Perkebunan Kopi (Green & Instant Beans)</option>
+                                <option value="14111">14111 - Pakaian Jadi Konveksi Batik Tradisional</option>
+                                <option value="16294">16294 - Industri Kerajinan Tangan Kayu & Rotan</option>
+                                <option value="10731">10731 - Industri Pengolahan Kakao & Cokelat Olahan</option>
+                                <option value="10771">10771 - Industri Pengolahan & Pengemasan Teh Hijau/Hitam</option>
+                                <option value="10212">10212 - Industri Pengolahan Udang Beku & Kalengan</option>
+                                <option value="31001">31001 - Industri Furnitur Bambu & Anyaman Alami</option>
+                                <option value="15201">15201 - Industri Alas Kaki & Sepatu Olahraga Kulit</option>
+                            </select>
+                            <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 flex items-center text-slate-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TOS Checkbox -->
+                    <div class="flex items-start gap-3 pt-2">
+                        <input id="tos" required type="checkbox" class="w-4 h-4 rounded border-slate-300 text-[#24389C] focus:ring-[#24389C]"/>
+                        <label for="tos" class="text-xs text-slate-500 leading-snug">
+                            Saya menyatakan data ini benar dan badan usaha kami telah berjalan aktif minimal selama 6 bulan berturut-turut sesuai ketentuan KUR.
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submit-btn" 
+                            class="w-full py-3.5 bg-slate-200 text-slate-400 font-semibold rounded-xl transition-all flex items-center justify-center gap-2 cursor-not-allowed" disabled>
+                        <span>Lanjutkan ke Pratinjau Dokumen</span>
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </button>
+                </div>
+            </form>
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-6 border-t border-slate-100 text-center text-xs text-slate-400 w-full bg-white">
+            <p>© 2026 LegalKilat. Hak Cipta Dilindungi.</p>
+        </footer>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initLegalKilatSidebar({ role: 'user', activePath: '/dashboard/proposal.html' });
+            enableFormPersistence('proposal-form', 'legalkilat_proposal_state');
+
+            const submitBtn = document.getElementById('submit-btn');
+            const plafonInput = document.getElementById('plafon');
+            const sektorSelect = document.getElementById('sektor-usaha');
+            const tosCheckbox = document.getElementById('tos');
+            const errorMsgEl = document.getElementById('plafon-error-msg');
+            const errorTextEl = document.getElementById('plafon-error-text');
+
+            function checkForm() {
+                if (plafonInput.value && sektorSelect.value && tosCheckbox.checked) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.replace('bg-slate-200', 'bg-[#24389C]');
+                    submitBtn.classList.replace('text-slate-400', 'text-white');
+                    submitBtn.classList.remove('cursor-not-allowed');
+                    submitBtn.classList.add('hover:brightness-110', 'active:scale-[0.98]');
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+                    submitBtn.classList.remove('bg-[#24389C]', 'text-white', 'hover:brightness-110', 'active:scale-[0.98]');
+                }
+            }
+
+            plafonInput.addEventListener('input', () => {
+                errorMsgEl.classList.add('hidden');
+                plafonInput.classList.remove('border-red-500');
+                checkForm();
+            });
+            sektorSelect.addEventListener('change', checkForm);
+            tosCheckbox.addEventListener('change', checkForm);
+
+            // Submit Form ke Server API
+            document.getElementById('proposal-form').addEventListener('submit', async (e) => {
+                const nominal = parseFloat(plafonInput.value);
+
+                if (isNaN(nominal) || nominal <= 0 || nominal > 500000000) {
+                    e.preventDefault();
+                    errorMsgEl.classList.remove('hidden');
+                    if (isNaN(nominal) || nominal <= 0) {
+                        errorTextEl.textContent = 'Peringatan: Nominal plafon pengajuan harus lebih besar dari Rp 0.';
+                    } else if (nominal > 500000000) {
+                        errorTextEl.textContent = 'Peringatan: Nominal plafon melebihi batas maksimal KUR pemerintah (maksimal Rp 500 Juta).';
+                    }
+                    plafonInput.classList.add('border-red-500');
+                    plafonInput.focus();
+                    return;
+                }
+
+                e.preventDefault();
+                errorMsgEl.classList.add('hidden');
+                plafonInput.classList.remove('border-red-500');
+
+                const originalContent = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Memproses Validasi...';
+
+                try {
+                    const response = await fetch('/api/submit-questionnaire', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            plafon: plafonInput.value,
+                            kbli: sektorSelect.value
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (response.ok && data.success) {
+                        showToast('Kuesioner berhasil dikirim!', 'success');
+                        setTimeout(() => {
+                            window.location.href = '/dashboard/pratinjau.html';
+                        }, 1000);
+                    } else {
+                        showInlineAlert('proposal-error-banner', data.message || 'Gagal mengirim kuesioner.');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalContent;
+                    }
+                } catch (err) {
+                    console.error(err);
+                    showToast('Gagal terhubung dengan server API.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalContent;
+                }
+            });
+
+            // Header Logout handler
+            document.getElementById('user-logout-btn').addEventListener('click', () => {
+                showModal({
+                    title: 'Konfirmasi Keluar',
+                    message: 'Apakah Anda yakin ingin keluar dari sesi pengguna LegalKilat?',
+                    type: 'danger',
+                    confirmText: 'Ya, Keluar',
+                    onConfirm: async () => {
+                        try {
+                            const response = await fetch('/api/auth/logout', { method: 'POST' });
+                            if (response.ok) {
+                                window.location.href = '/login.html';
+                            }
+                        } catch (err) {
+                            showToast('Gagal terhubung dengan server.', 'error');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

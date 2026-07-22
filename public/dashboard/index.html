@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LegalKilat - Dasbor Utama UMKM</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="/js/app-ui.js"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#24389C",
+              secondary: "#006C49",
+              surface: "#F8FAFF",
+              "on-surface": "#0B1C30",
+              "on-surface-variant": "#565E74",
+              "outline-variant": "#E2E8F0"
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        body {
+            background-color: #F8FAFF;
+            color: #0B1C30;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .widget-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .widget-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(36, 56, 156, 0.08);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex">
+
+    <!-- Unified Collapsible Left Sidebar -->
+    <div id="sidebar-container" class="shrink-0 sticky top-0 h-screen z-50"></div>
+
+    <!-- Main Outer Layout Wrapper -->
+    <div class="flex-grow flex flex-col min-h-screen overflow-x-hidden">
+
+        <!-- Top AppBar -->
+        <header class="bg-white border-b border-slate-100 shadow-xs sticky top-0 z-40 flex items-center justify-between px-6 h-16 w-full">
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-slate-800">LegalKilat Platform</span>
+                <span class="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200/60 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    Sesi Terhubung
+                </span>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button id="user-logout-btn" class="text-xs font-bold text-red-600 hover:text-red-800 transition flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    Keluar Sesi
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto max-w-5xl px-6 py-10 space-y-10">
+            
+            <!-- Welcome Hero Banner -->
+            <section class="bg-gradient-to-r from-[#24389C] to-[#1a2b7c] rounded-3xl p-8 sm:p-10 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div class="space-y-2 max-w-xl">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-white/10 text-indigo-100 border border-white/20">
+                        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                        Sesi Aktif - Terhubung Cloud MongoDB
+                    </span>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                        Selamat Datang di Dasbor LegalKilat
+                    </h1>
+                    <p class="text-xs sm:text-sm text-indigo-100 leading-relaxed">
+                        Kelola pengajuan permodalan KUR 6% efektif dan pastikan kepatuhan regulasi ekspor produk UMKM Anda dengan teknologi kecerdasan buatan terpadu.
+                    </p>
+                </div>
+                <div class="shrink-0 flex gap-3">
+                    <a href="/dashboard/pratinjau.html" class="px-5 py-3 bg-white text-[#24389C] font-extrabold text-xs rounded-xl hover:bg-indigo-50 transition-all shadow flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">description</span>
+                        <span>Lihat Proposal</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- 3 Interactive Widget Cards Section -->
+            <section class="space-y-4">
+                <div class="flex justify-between items-end">
+                    <div>
+                        <h2 class="text-xl font-bold text-[#0B1C30]">Pilih Layanan Akselerasi Usaha</h2>
+                        <p class="text-xs text-slate-400">Akses modul mandiri sesuai dengan kebutuhan perkembangan bisnis Anda</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- Card 1: Pengajuan KUR -->
+                    <div class="widget-card bg-white border border-slate-100 rounded-2xl p-6 flex flex-col justify-between h-full shadow-sm space-y-6">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <div class="w-12 h-12 rounded-xl bg-[#24389C]/10 flex items-center justify-center text-[#24389C]">
+                                    <span class="material-symbols-outlined text-2xl font-semibold">account_balance</span>
+                                </div>
+                                <span class="px-2.5 py-1 bg-green-50 text-[#006C49] rounded-full text-[10px] font-bold border border-green-200/50">
+                                    Bunga 6% Efektif
+                                </span>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-[#0B1C30]">Pengajuan Pembiayaan KUR</h3>
+                                <p class="text-slate-500 text-xs mt-1 leading-relaxed">
+                                    Simulasi hitung angsuran anuitas 6% efektif, ketahui 4 berkas syarat perbankan, dan buat draf proposal modal kerja resmi.
+                                </p>
+                            </div>
+                        </div>
+                        <a href="/dashboard/kur.html" class="w-full py-3 bg-[#24389C] text-white rounded-xl text-xs font-bold hover:brightness-110 active:scale-[0.98] transition flex items-center justify-center gap-2 shadow">
+                            <span>Buka Modul KUR</span>
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </a>
+                    </div>
+
+                    <!-- Card 2: Kepatuhan Ekspor -->
+                    <div class="widget-card bg-white border border-slate-100 rounded-2xl p-6 flex flex-col justify-between h-full shadow-sm space-y-6">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <div class="w-12 h-12 rounded-xl bg-[#006C49]/10 flex items-center justify-center text-[#006C49]">
+                                    <span class="material-symbols-outlined text-2xl font-semibold">local_shipping</span>
+                                </div>
+                                <span class="px-2.5 py-1 bg-indigo-50 text-[#24389C] rounded-full text-[10px] font-bold border border-indigo-100">
+                                    8 KBLI Ekspor
+                                </span>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-[#0B1C30]">Kepatuhan & Regulasi Ekspor</h3>
+                                <p class="text-slate-500 text-xs mt-1 leading-relaxed">
+                                    Analisis Kode HS BTKI 2022, cek tarif Bea Keluar, dan jenerasikan draf Commercial Invoice & Packing List secara otomatis.
+                                </p>
+                            </div>
+                        </div>
+                        <a href="/dashboard/ekspor.html" class="w-full py-3 bg-[#006C49] text-white rounded-xl text-xs font-bold hover:brightness-110 active:scale-[0.98] transition flex items-center justify-center gap-2 shadow">
+                            <span>Buka Modul Ekspor</span>
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </a>
+                    </div>
+
+                    <!-- Card 3: AI Chatbot -->
+                    <div class="widget-card bg-white border border-slate-100 rounded-2xl p-6 flex flex-col justify-between h-full shadow-sm space-y-6">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+                                    <span class="material-symbols-outlined text-2xl font-semibold">smart_toy</span>
+                                </div>
+                                <span class="px-2.5 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-bold border border-amber-200/50">
+                                    AI RAG Grounded
+                                </span>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-[#0B1C30]">Asisten AI LegalKilat</h3>
+                                <p class="text-slate-500 text-xs mt-1 leading-relaxed">
+                                    Konsultasikan pertanyaan hukum perbankan KUR dan izin kepabeanan ekspor secara cepat tanpa risiko halusinasi.
+                                </p>
+                            </div>
+                        </div>
+                        <a href="/dashboard/chat.html" class="w-full py-3 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 active:scale-[0.98] transition flex items-center justify-center gap-2 shadow">
+                            <span>Tanya Asisten AI</span>
+                            <span class="material-symbols-outlined text-sm">chat</span>
+                        </a>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Quick Status & Activity Bar -->
+            <section class="bg-white border border-slate-100 rounded-2xl p-6 space-y-4 shadow-sm">
+                <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#24389C]">fact_check</span>
+                    <span>Ringkasan Status Alur Pengajuan Anda</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div class="p-4 bg-slate-50 rounded-xl flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center font-bold">1</div>
+                        <div>
+                            <p class="font-bold text-slate-700">Skema KUR</p>
+                            <p class="text-slate-500 text-[11px]">Bunga 6% Efektif Terverifikasi</p>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-[#24389C] flex items-center justify-center font-bold">2</div>
+                        <div>
+                            <p class="font-bold text-slate-700">Analisis Kepatuhan</p>
+                            <p class="text-slate-500 text-[11px]">Kode HS & Bea Keluar Grounded</p>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold">3</div>
+                        <div>
+                            <p class="font-bold text-slate-700">Dokumen Siap Cetak</p>
+                            <p class="text-slate-500 text-[11px]">Cetak PDF A4 Berstandar Bank</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-6 border-t border-slate-100 text-center text-xs text-slate-400 w-full bg-white">
+            <p>© 2026 LegalKilat. Hak Cipta Dilindungi.</p>
+        </footer>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initLegalKilatSidebar({ role: 'user', activePath: '/dashboard/index.html' });
+
+            document.getElementById('user-logout-btn').addEventListener('click', () => {
+                showModal({
+                    title: 'Konfirmasi Keluar',
+                    message: 'Apakah Anda yakin ingin keluar dari sesi pengguna LegalKilat?',
+                    type: 'danger',
+                    confirmText: 'Ya, Keluar',
+                    onConfirm: async () => {
+                        try {
+                            const response = await fetch('/api/auth/logout', { method: 'POST' });
+                            if (response.ok) {
+                                window.location.href = '/login.html';
+                            }
+                        } catch (err) {
+                            showToast('Gagal terhubung dengan server.', 'error');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

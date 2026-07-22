@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LegalKilat - Digitalisasi Akselerasi Ekspor & Permodalan KUR UMKM</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFF;
+            color: #0B1C30;
+        }
+        .gradient-bg {
+            background: radial-gradient(circle at 10% 20%, rgba(36, 56, 156, 0.08) 0%, rgba(255, 255, 255, 0) 60%),
+                        radial-gradient(circle at 90% 80%, rgba(0, 108, 73, 0.05) 0%, rgba(255, 255, 255, 0) 50%);
+        }
+        .feature-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(36, 56, 156, 0.08);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between gradient-bg">
+
+    <!-- Top AppBar -->
+    <header class="bg-white border-b border-slate-100 shadow-sm sticky top-0 z-50 flex items-center justify-between px-6 h-16 w-full">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#24389C] text-3xl font-bold">gavel</span>
+            <a href="/" class="text-xl font-bold text-[#24389C] tracking-wide">LegalKilat</a>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="/login.html" class="text-xs font-bold text-[#24389C] border border-[#24389C] hover:bg-[#24389C]/5 px-4 py-2 rounded-lg transition">
+                Masuk ke Dasbor
+            </a>
+            <a href="/register.html" class="text-xs font-bold bg-[#24389C] text-white hover:brightness-110 px-4 py-2 rounded-lg transition">
+                Daftar Baru
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow container mx-auto px-6 py-12 flex flex-col items-center justify-center">
+        <!-- Hero Section -->
+        <div class="text-center max-w-3xl mb-16 space-y-6">
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-[#0B1C30] tracking-tight leading-tight">
+                Digitalisasi Kepatuhan Hukum & Akselerasi Ekspor UMKM
+            </h1>
+            <p class="text-slate-500 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+                Solusi terpadu berbasis RAG (Retrieval-Augmented Generation) yang membantu pelaku usaha Mikro, Kecil, dan Menengah mengakses Kredit Usaha Rakyat (KUR) 6% efektif serta mematuhi regulasi kepabeanan ekspor nasional tanpa risiko halusinasi.
+            </p>
+            <!-- Single Primary CTA in Hero Section -->
+            <div class="pt-2 flex justify-center">
+                <a href="/register.html" class="px-10 py-4 bg-[#24389C] text-white font-extrabold text-base rounded-2xl hover:brightness-110 active:scale-[0.98] transition-all shadow-xl flex items-center justify-center gap-3">
+                    <span>Mulai Akselerasi Usaha Sekarang</span>
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Section: Fitur Unggulan Produk -->
+        <div class="w-full max-w-5xl space-y-8 mb-16">
+            <div class="text-center space-y-2">
+                <h2 class="text-2xl font-bold text-[#0B1C30]">Fitur Unggulan Platform LegalKilat</h2>
+                <p class="text-xs text-slate-400">Teknologi kecerdasan buatan terkonfirmasi basis data hukum resmi untuk efisiensi bisnis UMKM</p>
+            </div>
+
+            <!-- Feature Cards Grid (4 Features) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Feature 1 -->
+                <div class="feature-card bg-white border border-slate-100 rounded-2xl p-6 space-y-3 shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-[#24389C]/10 flex items-center justify-center text-[#24389C]">
+                        <span class="material-symbols-outlined text-2xl font-semibold">account_balance</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#0B1C30]">Validasi KUR Bunga 6% Efektif</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">
+                        Perhitungan simulasi angsuran anuitas yang presisi untuk 3 skema KUR (Super Mikro, Mikro, dan Kecil) beserta analisis arus kas 6 bulan yang disesuaikan dengan aturan Permenko.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-card bg-white border border-slate-100 rounded-2xl p-6 space-y-3 shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-[#006C49]/10 flex items-center justify-center text-[#006C49]">
+                        <span class="material-symbols-outlined text-2xl font-semibold">local_shipping</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#0B1C30]">Analisis Kepatuhan Regulasi Ekspor</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">
+                        Deteksi otomatis Kode HS BTKI 2022, batas Bea Keluar, serta daftar berkas ekspor wajib (COO/SKA, Phytosanitary, SVLK, HC) untuk 8 komoditas utama Indonesia.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card bg-white border border-slate-100 rounded-2xl p-6 space-y-3 shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+                        <span class="material-symbols-outlined text-2xl font-semibold">description</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#0B1C30]">Generator Template Dokumen Ekspor AI</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">
+                        Fitur draf otomatis dokumen ekspor resmi (Commercial Invoice, Packing List, Certificate of Origin) yang dapat disunting dan diunduh langsung untuk transaksi internasional.
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="feature-card bg-white border border-slate-100 rounded-2xl p-6 space-y-3 shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+                        <span class="material-symbols-outlined text-2xl font-semibold">verified</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#0B1C30]">RAG Engine Bebas Halusinasi</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">
+                        Modul AI RAG membaca berkas basis data hukum perbankan dan perdagangan secara lokal sebagai sumber kebenaran mutlak (grounding source) tanpa mengarang informasi.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Main Bottom CTA Hook (with both Register CTA and Masuk ke Dasbor Button) -->
+        <div class="w-full max-w-4xl bg-gradient-to-r from-[#24389C] to-[#1a2b7c] rounded-3xl p-8 sm:p-12 text-white text-center space-y-6 shadow-xl mb-12">
+            <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight">Siap Memperluas Usaha & Ekspor Komoditas Anda?</h2>
+            <p class="text-indigo-100 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
+                Daftarkan akun perusahaan UMKM Anda secara gratis dan dapatkan draf proposal KUR berstandar bank serta panduan lisensi ekspor lengkap dalam hitungan detik.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="/register.html" class="w-full sm:w-auto px-8 py-4 bg-white text-[#24389C] font-extrabold text-sm rounded-xl hover:bg-indigo-50 transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2">
+                    <span>Daftar Akun UMKM Gratis</span>
+                    <span class="material-symbols-outlined text-sm">rocket_launch</span>
+                </a>
+                <a href="/login.html" class="w-full sm:w-auto px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2">
+                    <span>Masuk ke Dasbor</span>
+                    <span class="material-symbols-outlined text-sm">login</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Development & Collaboration Note -->
+        <div class="w-full max-w-3xl bg-slate-100 border border-slate-200 rounded-2xl p-5 text-center text-xs text-slate-600 leading-relaxed space-y-1">
+            <p class="font-bold text-slate-700">Catatan Pengembang & Kerjasama:</p>
+            <p>
+                Aplikasi ini masih dalam tahap pengembangan untuk pemenuhan kebutuhan IDCamp. Jika ada keinginan kerja sama, dapat menghubungi <a href="mailto:muhseptianp@outlook.com" class="text-[#24389C] font-bold underline">muhseptianp@outlook.com</a>.
+            </p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-6 border-t border-slate-100 text-center text-xs text-slate-400 w-full bg-white">
+        <p>© 2026 LegalKilat. Hak Cipta Dilindungi.</p>
+    </footer>
+
+</body>
+</html>
