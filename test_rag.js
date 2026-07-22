@@ -56,7 +56,9 @@ async function runTests() {
         console.log(`✔ Inisialisasi Indeks RAG Sukses: Terbentuk ${rag.chunks.length} potongan grounding.`);
         
         console.log('\nMengevaluasi Pencarian Hybrid Semantik...');
-        const searchResults = await rag.search('Berapa bunga KUR Mikro Mandiri?', 3);
+        const searchResponse = await rag.search('Berapa bunga KUR Mikro Mandiri?', 3);
+        const searchResults = searchResponse.results;
+        assert.ok(Array.isArray(searchResults));
         assert.strictEqual(searchResults.length, 3);
         console.log('Hasil Pencarian Teratas untuk "Berapa bunga KUR Mikro Mandiri?":');
         searchResults.forEach((r, i) => {
@@ -67,6 +69,7 @@ async function runTests() {
         const topResultText = searchResults[0].text.toLowerCase();
         assert.ok(topResultText.includes('bunga') || topResultText.includes('kur') || topResultText.includes('6%'));
         console.log('✔ Uji Hybrid Search Semantik RAG: BERHASIL');
+
 
     } catch (err) {
         console.error('✘ Uji RAG Engine Gagal:', err);

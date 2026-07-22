@@ -8,84 +8,96 @@ if (!process.env.HF_TOKEN) {
 }
 
 /**
- * Fungsi untuk memotong konten dari legal_database.html menjadi potongan-potongan kecil (chunks)
+ * Fungsi untuk memotong konten dari legal_database.html dan folder datasets markdown (rag/datasets/) menjadi chunks
  */
 function loadAndChunkDatabase() {
-    const htmlPath = path.join(__dirname, 'rag/datasets/legal_database.html');
+    // 1. Cari file HTML database regulasi (utamakan folder rag/datasets/, fallback ke root)
+    let htmlPath = path.join(__dirname, 'rag/datasets/legal_database.html');
     if (!fs.existsSync(htmlPath)) {
-        console.error(`File basis data tidak ditemukan di: ${htmlPath}`);
-        return [];
+        htmlPath = path.join(__dirname, 'legal_database.html');
     }
 
-    const htmlContent = fs.readFileSync(htmlPath, 'utf8');
-    const $ = cheerio.load(htmlContent);
     const chunks = [];
     let chunkId = 0;
 
-    // 1. Ekstrak data dari tabel
-    $('table').each((i, tableEl) => {
-        const table = $(tableEl);
-        const headers = [];
-        table.find('thead th').each((j, th) => {
-            headers.push($(th).text().trim());
-        });
+    if (fs.existsSync(htmlPath)) {
+        console.log(`[RAG DB] Memuat database HTML dari: ${htmlPath}`);
+        const htmlContent = fs.readFileSync(htmlPath, 'utf8');
+        const $ = cheerio.load(htmlContent);
 
-        table.find('tbody tr').each((j, tr) => {
-            const rowData = [];
-            $(tr).find('td').each((k, td) => {
-                rowData.push($(td).text().trim());
+        // Ekstrak data dari tabel
+        $('table').each((i, tableEl) => {
+            const table = $(tableEl);
+            const headers = [];
+            table.find('thead th').each((j, th) => {
+                headers.push($(th).text().trim());
             });
 
-            if (rowData.length > 0) {
-                const text = rowData.map((val, idx) => {
-                    const colName = headers[idx] || `Kolom ${idx + 1}`;
-                    return `${colName}: ${val}`;
-                }).join(' | ');
-                
+            table.find('tbody tr').each((j, tr) => {
+                const rowData = [];
+                $(tr).find('td').each((k, td) => {
+                    rowData.push($(td).text().trim());
+                });
+
+                if (rowData.length > 0) {
+                    const text = rowData.map((val, idx) => {
+                        const colName = headers[idx] || `Kolom ${idx + 1}`;
+                        return `${colName}: ${val}`;
+                    }).join(' | ');
+                    
+                    chunks.push({
+                        id: `tabel-baris-${chunkId++}`,
+                        text: `[Data Tabel Regulasi] ${text}`,
+                        source: 'Tabel Basis Data Regulasi'
+                    });
+                }
+            });
+        });
+
+        // Potong berdasarkan paragraf (<p>) dan daftar item (<li>)
+        $('p, li').each((i, el) => {
+            const text = $(el).text().trim().replace(/\s+/g, ' ');
+            if (text.length > 25) {
+                let sectionTitle = '';
+                let prev = $(el).prev();
+                while (prev.length > 0) {
+                    if (prev.is('h1, h2, h3, h4, h5, h6')) {
+                        sectionTitle = prev.text().trim();
+                        break;
+                    }
+                    prev = prev.prev();
+                }
+
                 chunks.push({
-                    id: `tabel-baris-${chunkId++}`,
-                    text: `[Data Tabel Regulasi] ${text}`,
-                    source: 'Tabel Basis Data Regulasi'
+                    id: `teks-blok-${chunkId++}`,
+                    text: sectionTitle ? `[Bagian: ${sectionTitle}] ${text}` : text,
+                    source: sectionTitle || 'Informasi Regulasi Umum'
                 });
             }
         });
-    });
 
-    // 2. Potong berdasarkan paragraf (<p>) dan daftar item (<li>)
-    $('p, li').each((i, el) => {
-        const text = $(el).text().trim().replace(/\s+/g, ' ');
-        if (text.length > 25) {
-            let sectionTitle = '';
-            let prev = $(el).prev();
-            while (prev.length > 0) {
-                if (prev.is('h1, h2, h3, h4, h5, h6')) {
-                    sectionTitle = prev.text().trim();
-                    break;
-                }
-                prev = prev.prev();
+        // Potong kartu modul utama
+        $('.bg-white, .bg-slate-50, .p-5, .p-6').each((i, el) => {
+            const clone = $(el).clone();
+            clone.find('table, .bg-white, .bg-slate-50').remove();
+            const text = clone.text().trim().replace(/\s+/g, ' ');
+            if (text.length > 50 && text.length < 600) {
+                chunks.push({
+                    id: `modul-kartu-${chunkId++}`,
+                    text: text,
+                    source: 'Modul Regulasi UMKM'
+                });
             }
+        });
+    } else {
+        console.warn(`[RAG DB WARNING] File HTML regulasi tidak ditemukan di ${htmlPath}`);
+    }
 
-            chunks.push({
-                id: `teks-blok-${chunkId++}`,
-                text: sectionTitle ? `[Bagian: ${sectionTitle}] ${text}` : text,
-                source: sectionTitle || 'Informasi Regulasi Umum'
-            });
-        }
-    });
-
-    // 3. Potong kartu modul utama
-    $('.bg-white, .bg-slate-50, .p-5, .p-6').each((i, el) => {
-        const clone = $(el).clone();
-        clone.find('table, .bg-white, .bg-slate-50').remove();
-        const text = clone.text().trim().replace(/\s+/g, ' ');
-        if (text.length > 50 && text.length < 600) {
-            chunks.push({
-                id: `modul-kartu-${chunkId++}`,
-                text: text,
-                source: 'Modul Regulasi UMKM'
-            });
-        }
-    });
+    // 2. Muat dokumen tambahan dari folder dataset Markdown (rag/datasets/)
+    const datasetsDir = path.join(__dirname, 'rag/datasets');
+    if (fs.existsSync(datasetsDir)) {
+        scanMarkdownDatasets(datasetsDir, datasetsDir, chunks, chunkId);
+    }
 
     const uniqueTexts = new Set();
     const filteredChunks = [];
@@ -98,6 +110,39 @@ function loadAndChunkDatabase() {
 
     return filteredChunks;
 }
+
+/**
+ * Pemindai rekursif file Markdown dataset regulasi (btki, kur, ekspor, insw-peb)
+ */
+function scanMarkdownDatasets(baseDir, currentDir, chunks, startId) {
+    try {
+        const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+        for (const entry of entries) {
+            const fullPath = path.join(currentDir, entry.name);
+            if (entry.isDirectory()) {
+                scanMarkdownDatasets(baseDir, fullPath, chunks, startId);
+            } else if (entry.isFile() && entry.name.endsWith('.md')) {
+                const relativePath = path.relative(baseDir, fullPath);
+                const mdContent = fs.readFileSync(fullPath, 'utf8');
+                const sections = mdContent.split(/(?=\n#{1,3}\s)/);
+
+                sections.forEach((sec, idx) => {
+                    const text = sec.trim().replace(/\s+/g, ' ');
+                    if (text.length > 30) {
+                        chunks.push({
+                            id: `dataset-md-${startId++}-${idx}`,
+                            text: `[Dataset Regulasi: ${relativePath}] ${text.substring(0, 450)}`,
+                            source: `Dataset ${relativePath}`
+                        });
+                    }
+                });
+            }
+        }
+    } catch (err) {
+        console.error(`[RAG DB ERROR] Gagal membaca dataset markdown dari ${currentDir}:`, err);
+    }
+}
+
 
 function cosineSimilarity(vecA, vecB) {
     let dotProduct = 0;
