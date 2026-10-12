@@ -1,4 +1,6 @@
 const assert = require('assert');
+// Uji ini berjalan offline (hanya sparse retrieval); jangan kirim HF_TOKEN nyata saat testing.
+process.env.HF_TOKEN = 'placeholder';
 const { RAGEngine } = require('./rag_engine');
 
 async function runTests() {
@@ -76,15 +78,15 @@ async function runTests() {
         process.exit(1);
     }
 
-    // 3. Uji Otentikasi & Session Mocking
-    console.log('\n[UJI 3] Menguji Kredensial Login Admin...');
-    const testAdminLogin = (username, password) => {
-        return (username === 'admin' && password === 'legalkilat2026');
-    };
-    assert.strictEqual(testAdminLogin('admin', 'legalkilat2026'), true);
-    assert.strictEqual(testAdminLogin('admin', 'password-salah'), false);
-    assert.strictEqual(testAdminLogin('penyusup', 'legalkilat2026'), false);
-    console.log('✔ Uji Kredensial Admin Auth (Benar/Salah): BERHASIL');
+    // 3. Guardrail & validasi input
+    console.log('\n[UJI 3] Menguji guardrail out-of-scope & input tidak valid...');
+    const oos = await rag.search('Siapa juara piala dunia sepak bola 2022?', 3);
+    assert.strictEqual(oos.outOfScope, true);
+    const empty = await rag.search(undefined, 3);
+    assert.deepStrictEqual(empty, { results: [], outOfScope: true });
+    const inScope = await rag.search('syarat dokumen ekspor PEB INSW', 3);
+    assert.strictEqual(inScope.outOfScope, false);
+    console.log('✔ Uji Guardrail Out-of-Scope & Input Kosong: BERHASIL');
 
     console.log('\n====================================================');
     console.log('  Semua Uji Coba Kepatuhan RAG BERHASIL! (100% OK)');

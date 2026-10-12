@@ -4,7 +4,8 @@
   "description": "Sistem RAG lokal untuk validasi pembiayaan ekspor dan KUR UMKM",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node test_rag.js && node test_server.js"
   },
   "keywords": [
     "rag",
@@ -12,10 +13,10 @@
     "umkm",
     "ekspor"
   ],
-  "author": "Antigravity AI",
+  "author": "Muhamad Septian Pamungkas",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^6.0.0",
     "body-parser": "^1.20.2",
     "cheerio": "^1.0.0-rc.12",
     "connect-mongo": "^5.1.0",

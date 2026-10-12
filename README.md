@@ -1,145 +1,89 @@
-# LegalKilat - Platform Legalitas & Akselerasi Bisnis UMKM Berbasis AI RAG
+# LegalKilat
 
-> **Proyek MVP IDCamp Developer Challenge #2: Digitalization & Acceleration of MSMEs with Generative AI**  
-> *Solusi All-in-One Kepatuhan Kemitraan KUR 6%, Analisis Kode HS Ekspor, dan AI Guardrail Hukum Indonesia.*
+Asisten kepatuhan untuk UMKM Indonesia yang ingin mengajukan **KUR (Kredit Usaha Rakyat)** dan **ekspor**: kalkulator cicilan, pemeriksaan kelayakan proposal, pemetaan komoditas ke kode HS, dan tanya-jawab berbasis retrieval (RAG) atas basis pengetahuan regulasi yang kecil dan terkurasi.
 
----
+Dibuat sebagai prototipe untuk **IDCamp Developer Challenge #2** (partisipan). Ini adalah MVP hackathon, bukan produk produksi.
 
-## 📌 Business & Problem Overview
+> **Bukan nasihat hukum atau keuangan.** Isi basis pengetahuan adalah ringkasan informasi publik pada saat disusun dan dapat sudah usang (mis. suku bunga, plafon, tarif bea keluar). Selalu verifikasi ke sumber resmi (kur.ekon.go.id, insw.go.id, customs.go.id) dan bank penyalur / Bea Cukai sebelum mengambil keputusan.
 
-### Latar Belakang & Permasalahan
-Usaha Mikro, Kecil, dan Menengah (UMKM) merupakan tulang punggung perekonomian Indonesia. Namun, sebagian besar pelaku UMKM menghadapi hambatan struktural saat ingin melakukan ekspansi bisnis melalui skema pembiayaan Kredit Usaha Rakyat (KUR) maupun perdagangan internasional (ekspor):
+## Screenshot
 
-1. **Kerumitan Syarat Administrasi KUR 6%:** Pelaku UMKM sering kali kesulitan menyusun proposal bisnis formal dan menghitung skema kredit anuitas 6% secara akurat sesuai regulasi pemerintah.
-2. **Hambatan Kepatuhan Kepabeanan & Ekspor:** Ketidakpahaman mengenai Klasifikasi Kode HS (BTKI 2022), ketentuan Bea Keluar, dan dokumen kepabeanan wajib (NIB, PEB, COO/SKA, SVLK, Phytosanitary) mengakibatkan kontainer kargo tertahan atau dikenakan denda bea masuk di negara tujuan.
-3. **Risiko Informasi Palsu & Halusinasi AI:** Penggunaan AI umum tanpa grounding hukum sering memberikan jawaban halusinasi yang tidak sesuai dengan undang-undang atau regulasi perbankan Indonesia yang berlaku.
+| Landing | Simulasi KUR | Chat RAG |
+|---|---|---|
+| ![Landing](docs/screenshots/01-landing.png) | ![KUR](docs/screenshots/03-kur-simulasi.png) | ![Chat](docs/screenshots/05-chat-rag.png) |
 
-### Solusi LegalKilat
-**LegalKilat** hadir sebagai platform *all-in-one suite* terpadu yang memadukan teknologi kecerdasan buatan berbasis *Retrieval-Augmented Generation* (RAG) dengan sistem akuntansi dan kelayakan legalitas hukum:
+Lainnya: [login](docs/screenshots/02-login.png), [analisis ekspor](docs/screenshots/04-analisis-ekspor.png), [simulator RAG admin](docs/screenshots/06-admin-simulator.png).
 
-* **Kalkulator & Proposal Generator KUR 6%:** Menghitung simulasi kredit anuitas resmi dan menggenerasi dokumen proposal formal standar A4 dalam hitungan detik.
-* **Analisis Ekspor & Commercial Invoice Generator:** Memetakan KBLI ke Kode HS BTKI 2022, rincian Bea Keluar, serta menerbitkan draf *Commercial Invoice* terstandarisasi.
-* **Engine AI Grounded RAG dengan Guardrail:** Menjawab pertanyaan hukum UMKM dengan sumber rujukan mutlak (*Grounding Context*) dari basis data regulasi resmi tanpa risiko halusinasi.
+## Masalah
 
-### Dampak Bisnis
-* ⏱️ **Efisiensi Waktu Pengajuan:** Memangkas waktu penyusunan proposal KUR dari berhari-hari menjadi kurang dari 3 menit.
-* 🛡️ **Kepatuhan Kepabeanan 100%:** Mengurangi risiko penolakan kargo ekspor di pelabuhan akibat kesalahan dokumen atau klasifikasi Kode HS.
-* 📈 **Percepatan Skalabilitas UMKM:** Membuka akses pendanaan modal kerja dan kemudahan ekspor mandiri secara terstruktur.
+- Pelaku UMKM kesulitan memahami syarat dan skema plafon KUR serta menghitung cicilannya.
+- Klasifikasi kode HS, bea keluar, dan dokumen ekspor (NIB, PEB, SKA/COO, SVLK, fitosanitari) membingungkan.
+- Chatbot umum tanpa rujukan sering memberi jawaban yang tidak sesuai aturan Indonesia.
 
----
+## Solusi
 
-## 🛠️ Architecture & Tech Stack
+1. **Kalkulator & validasi KUR**: menentukan skema (Super Mikro / Mikro / Kecil) dari plafon, menghitung cicilan anuitas 6% efektif, dan menghasilkan pratinjau proposal yang bisa dicetak ke PDF (html2pdf.js di sisi klien).
+2. **Analisis ekspor**: memetakan 8 komoditas contoh (kopi, batik, kerajinan, kakao, teh, udang beku, furnitur bambu, alas kaki) ke kode KBLI/HS, bea keluar, dan dokumen wajib, plus draf commercial invoice.
+3. **Chat RAG dengan guardrail**: menjawab pertanyaan seputar KUR/ekspor sambil menampilkan potongan sumber yang dirujuk; pertanyaan di luar topik ditolak.
+4. **Panel admin**: simulator RAG untuk mencoba kueri, melihat konteks yang diambil, dan prompt yang dikompilasi.
 
-```
-                                  +---------------------------------+
-                                  |     Klien Browser (SPA UX)       |
-                                  | HTML5 / CSS3 / Vanilla JS / PDF |
-                                  +---------------------------------+
-                                                   |
-                                            HTTPS / REST API
-                                                   |
-                                                   v
-+----------------------------------------------------------------------------------------------------+
-|                                    Node.js / Express.js Server                                     |
-|                                                                                                    |
-|  +---------------------------+   +-------------------------------+   +--------------------------+  |
-|  | Sesi & RBAC Auth          |   | Modul Kalkulasi Finansial     |   | AI RAG Hybrid Engine     |  |
-|  | (express-session / bcrypt)|   | (Anuitas 6% & Matriks Ekspor) |   | (Dense + Sparse Retrieval|  |
-|  +---------------------------+   +-------------------------------+   +--------------------------+  |
-+----------------------------------------------------------------------------------------------------+
-              |                                    |                                    |
-              v                                    v                                    v
-+---------------------------+        +---------------------------+        +---------------------------+
-|    MongoDB Atlas Cloud    |        | Hugging Face Inference API|        |    legal_database.html    |
-| (Akun User, Proposal, Sesi|        | (sentence-transformers    |        | (Grounding Source Mutlak) |
-+---------------------------+        +---------------------------+        +---------------------------+
-```
+## Pendekatan RAG
 
-* **Backend:** Node.js, Express.js, `express-session`, `connect-mongo`, `cookie-parser`, `dotenv`
-* **Database & Keamanan:** MongoDB Atlas Cloud, Bcrypt Password Hashing (10 Salt Rounds), Middleware Sesi RBAC (`userAuth` & `adminAuth`)
-* **AI & RAG Engine:** Hugging Face Inference API (`sentence-transformers/all-MiniLM-L6-v2`), Vector Dense Embedding + Hybrid Sparse Search (BM25-like), Cosine Similarity Scoring, Relevance Threshold Guardrail
-* **Frontend & Rendering PDF:** HTML5, Vanilla CSS3 (Custom Design Token & Utilities), JavaScript (ES6+ Native), `html2pdf.js`, Material Symbols / Lucide Icons
+- **Korpus**: 251 chunk dari `rag/datasets/legal_database.html` (tabel/seksi HTML) dan 5 berkas markdown di `rag/datasets/`, dipotong oleh `loadAndChunkDatabase()` di `rag_engine.js`.
+- **Retrieval hibrida**: skor sparse (kata kunci) selalu tersedia. Jika `HF_TOKEN` diset, ditambah dense embedding `sentence-transformers/all-MiniLM-L6-v2` via Hugging Face Inference API dengan skor `0.7 * cosine + 0.3 * sparse`.
+- **Guardrail relevansi**: jika skor teratas di bawah ambang (0.25 sparse-only, 0.20 hybrid), kueri dianggap di luar lingkup, jawaban penolakan dikembalikan, dan sumber tidak ditampilkan.
+- **Generasi jawaban**: **tidak ada LLM**. Jawaban disusun dari templat berbasis aturan (kata kunci) di `server.js`, dengan potongan hasil retrieval sebagai sumber/fallback. Artinya jawaban terkontrol dan tidak berhalusinasi, tetapi terbatas pada topik yang sudah ditulis templatnya.
 
----
+## Sumber data dan lisensi
 
-## ✨ Key Features
+Basis pengetahuan (`rag/datasets/`) adalah **ringkasan tulisan sendiri** (bukan salinan massal) dari informasi publik berikut, ditulis ulang dalam bentuk tabel/poin:
 
-1. **Simulasi KUR 6% Anuitas & Auto-Generate Proposal (PDF A4)**
-   * Perhitungan otomatis angsuran bulanan tepat sesuai suku bunga KUR 6% efektif per tahun untuk tenor 12, 24, 36, 48, dan 60 bulan.
-   * Cetak proposal formal A4 simetris tanpa terpotong (*responsive A4 wrapper*) yang siap diserahkan ke bank penyalur (BRI, Mandiri, BNI).
+| Topik | Sumber rujukan |
+|---|---|
+| Skema, plafon, suku bunga, syarat KUR | kur.ekon.go.id (Kemenko Perekonomian); Permenko No. 8/2019 jo. No. 15/2020 jo. No. 2/2021 |
+| Syarat dokumen bank penyalur | Informasi publik bank penyalur (BRI, BNI) |
+| Prosedur ekspor, PEB, INSW | insw.go.id, DJBC (customs.go.id), Kemendag, KemenkopUKM |
+| Kode HS / BTKI | BTKI 2022, nomenklatur WCO HS 2022 (hanya kode dan tarif contoh, tanpa teks nomenklatur penuh) |
 
-2. **Analisis Kode HS (BTKI 2022) & Generator Draf Commercial Invoice**
-   * Pemetaan otomatis 8 KBLI komoditas unggulan Indonesia (Kopi, Batik, Kerajinan Tangan, Kakao, Teh, Udang Beku, Furnitur Bambu, Alas Kaki).
-   * Generasi draf *Commercial Invoice* ekspor secara *real-time* yang dapat diunduh sebagai file PDF A4 bersih.
+Peraturan perundang-undangan RI pada umumnya tidak dilindungi hak cipta (UU No. 28/2014 Pasal 43), namun ringkasan di repo ini tetap bisa tidak akurat atau kedaluwarsa. Dokumen sumber mentah (PDF Permenko, WCO HS) **tidak** disertakan di repo ini. Jika Anda mengetahui kekeliruan atau masalah lisensi, silakan buka issue.
 
-3. **Asisten AI Hukum Grounded RAG (dengan Out-of-Scope Guardrail)**
-   * Menjawab kueri seputar regulasi KUR dan ekspor berbasiskan basis data hukum resmi.
-   * **Relevance Guardrail:** Pertanyaan di luar topik (seperti sains umum, olahraga, atau politik) otomatis disaring oleh threshold Cosine Similarity (`< 0.20`), dan dijawab dengan penolakan ramah tanpa memunculkan sumber grounding acak.
+## Stack
 
-4. **Panel Admin & Simulator Prompt RAG**
-   * Dashboard terproteksi khusus administrator untuk mensimulasikan kueri RAG, menguji kecocokan *grounding context*, dan memeriksa *safety warning* terhadap upaya manipulasi bunga KUR.
+Node.js 18+ (diuji di Node 22), Express 4, express-session + connect-mongo, bcrypt, Mongoose (opsional), cheerio, dotenv; frontend HTML/CSS/JS vanilla; embedding opsional via Hugging Face Inference API.
 
-5. **SPA-Like UX & Retensi Data Form Client-Side**
-   * Pengalaman pengguna yang mulus tanpa pengulangan input data berkat integrasi `sessionStorage` form persistence pada halaman KUR, Ekspor, dan Proposal.
-   * Umpan balik visual dinamis menggunakan sistem Custom Modal Popup dan Toast UI tanpa `alert()` bawaan browser.
-
----
-
-## 🚀 How to Run Locally
-
-Ikuti langkah-langkah berikut untuk menjalankan proyek di komputer lokal Anda:
-
-### 1. Prasyarat Sistem
-* Node.js (versi 18.0.0 atau lebih baru)
-* NPM (versi 9.0.0 atau lebih baru)
-* Koneksi Internet (untuk Hugging Face API & MongoDB Atlas)
-
-### 2. Langkah Instalasi
+## Menjalankan
 
 ```bash
-# 1. Clone repositori ke direktori lokal
-git clone https://github.com/username/LegalKilat.git
+git clone https://github.com/seppam/LegalKilat.git
 cd LegalKilat
-
-# 2. Install seluruh dependensi proyek
 npm install
-
-# 3. Salin file lingkungan .env.example menjadi .env
-cp .env.example .env
-
-# 4. Sesuaikan isi file .env (opsional jika ingin menggunakan MongoDB Atlas atau HF Token pribadi)
-# Catatan: Jika MONGODB_URI/HF_TOKEN tidak diisi, sistem otomatis beralih ke Fallback Mode aman!
+cp .env.example .env     # opsional; semua nilai punya fallback untuk dev lokal
+npm start                # http://localhost:3000
 ```
 
-### 3. Menjalankan Aplikasi
+Mode fallback (tanpa MongoDB dan tanpa `HF_TOKEN`): sesi disimpan di memori, retrieval hanya sparse, dan **hanya login admin yang tersedia** (registrasi/login pengguna biasa membutuhkan `MONGODB_URI` yang valid, jika tidak API mengembalikan 503).
+
+Login admin untuk demo lokal: username `admin`, sandi dari `ADMIN_PASSWORD` (default dev `legalkilat2026` bila tidak diset). Halaman: `/dashboard/kur.html`, `/dashboard/ekspor.html`, `/dashboard/chat.html`, `/admin/simulator.html`. Pada `NODE_ENV=production`, server menolak start bila `SESSION_SECRET` atau `ADMIN_PASSWORD` kosong.
+
+## Pengujian
 
 ```bash
-# Jalankan server orkestrator RAG
-npm start
-# atau menggunakan nodemon (jika terinstall):
-npm run dev
+npm test
 ```
 
-### 4. Akses Aplikasi
-Buka peramban (browser) dan kunjungi:
-* 🌐 **Portal Utama:** `http://localhost:3000`
-* 📝 **Pendaftaran Akun:** `http://localhost:3000/register.html`
-* 🔐 **Halaman Masuk:** `http://localhost:3000/login.html`
-* 📊 **Dasbor Pengguna:** `http://localhost:3000/dashboard/proposal.html`
-* ⚙️ **Panel Admin:** `http://localhost:3000/admin/simulator.html`
+Menjalankan dua suite (tanpa jaringan, tanpa DB, `HF_TOKEN` dipaksa placeholder):
 
----
+- `test_rag.js`: validasi skema/plafon/KBLI, inisialisasi indeks RAG (sparse), pencarian, guardrail out-of-scope, input kosong.
+- `test_server.js`: menjalankan `server.js` sebagai proses anak lalu menguji API lewat HTTP: proteksi auth (401/403), login admin benar/salah, `/api/rag-simulate`, `/api/chat-rag`, validasi input (400), dan penolakan start produksi tanpa rahasia.
 
-## 🔑 Demo Credentials
+## Keterbatasan
 
-Untuk keperluan pengujian juri dan reviewer kompetisi, gunakan kredensial berikut:
+- Jawaban chat berbasis templat aturan, bukan LLM; cakupan topik sempit (KUR dan 8 komoditas contoh).
+- Data bersifat snapshot dan belum diverifikasi ulang terhadap ketentuan terkini; angka KUR (6%, plafon) dan tarif bea keluar dapat berubah.
+- Jalur dense embedding memakai endpoint `api-inference.huggingface.co`; endpoint Hugging Face dapat berubah dan jalur ini belum diverifikasi ulang dengan token nyata. Tanpa token, aplikasi tetap berfungsi dengan sparse retrieval.
+- Pendaftaran/login pengguna butuh MongoDB. Tidak ada rate limiting, CSRF protection, atau audit keamanan penuh; jangan dipakai untuk data sensitif sungguhan.
+- Akun admin tunggal berbasis sandi dari environment.
 
-| Peran (Role) | Identifier / Username / Email | Kata Sandi (Password) | Akses Area |
-|---|---|---|---|
-| **Administrator** | `admin` *(atau `admin@legalkilat.id`)* | `legalkilat2026` | `/admin/ingestion.html`, `/admin/simulator.html` |
-| **Pengguna (UMKM)** | Registrasi baru di `/register.html` | Sesuai pendaftaran | `/dashboard/proposal.html`, `/dashboard/kur.html`, `/dashboard/ekspor.html`, `/dashboard/chat.html` |
+## Lisensi
 
----
-
-> **Diproduksi oleh Team Antigravity AI** untuk *IDCamp Developer Challenge #2*.  
-> *Hak Cipta © 2026 LegalKilat. Seluruh hak cipta dilindungi undang-undang.*
+Kode: [MIT](LICENSE). Konten dataset adalah ringkasan informasi publik pemerintah dan lembaga terkait; hak atas sumber aslinya tetap pada pemiliknya.

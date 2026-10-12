@@ -276,6 +276,9 @@ class RAGEngine {
      * @returns {{ results: Array, outOfScope: boolean }}
      */
     async search(query, topK = 5) {
+        if (typeof query !== 'string' || !query.trim()) {
+            return { results: [], outOfScope: true };
+        }
         if (!this.initialized) {
             await this.init();
         }

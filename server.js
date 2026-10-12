@@ -16,6 +16,12 @@ const { userAuth, adminAuth } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Di produksi, jangan pernah memakai nilai fallback bawaan untuk rahasia sesi / sandi admin.
+if (process.env.NODE_ENV === 'production' && (!process.env.SESSION_SECRET || !process.env.ADMIN_PASSWORD)) {
+    console.error('[CONFIG] NODE_ENV=production membutuhkan SESSION_SECRET dan ADMIN_PASSWORD di environment.');
+    process.exit(1);
+}
 const BCRYPT_ROUNDS = 10; // [PATCH-3] Jumlah salt rounds bcrypt
 
 // [PATCH-5] Percayai proxy untuk mendukung HTTPS di Render/Railway
@@ -346,7 +352,13 @@ function initializeServer(sessionStore) {
      * [PATCH-1] Handler RAG Simulator Admin (diekstrak menjadi fungsi terpisah untuk mendukung dual-route alias)
      */
     const ragSimulatorHandler = async (req, res) => {
-        const { question, prompt, topK } = req.body;
+        const { question, topK } = req.body;
+        const prompt = typeof req.body.prompt === 'string' && req.body.prompt
+            ? req.body.prompt
+            : 'Jawab hanya berdasarkan konteks berikut.\n\nKONTEKS:\n{{GROUNDING_DATA}}\n\nPERTANYAAN: {{USER_QUERY}}';
+        if (typeof question !== 'string' || !question.trim()) {
+            return res.status(400).json({ success: false, message: 'Field "question" wajib diisi (string).' });
+        }
         console.log(`[API] Menerima kueri simulasi RAG: "${question}"`);
 
         try {
@@ -422,7 +434,7 @@ function initializeServer(sessionStore) {
      */
     app.post('/api/chat-rag', userAuth, async (req, res) => {
         const { message } = req.body;
-        if (!message) {
+        if (typeof message !== 'string' || !message.trim()) {
             return res.status(400).json({ success: false, message: 'Pesan wajib diisi.' });
         }
 
