@@ -22,6 +22,15 @@ if (process.env.NODE_ENV === 'production' && (!process.env.SESSION_SECRET || !pr
     console.error('[CONFIG] NODE_ENV=production membutuhkan SESSION_SECRET dan ADMIN_PASSWORD di environment.');
     process.exit(1);
 }
+// Di non-produksi, buat nilai acak per proses bila tidak diset (tidak pernah ditulis ke file).
+const crypto = require('crypto');
+let ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+let SESSION_SECRET = process.env.SESSION_SECRET;
+if (!SESSION_SECRET) SESSION_SECRET = crypto.randomBytes(32).toString('hex');
+if (!ADMIN_PASSWORD) {
+    ADMIN_PASSWORD = crypto.randomBytes(12).toString('base64url');
+    console.log(`[CONFIG] ADMIN_PASSWORD tidak diset. Sandi admin sementara (hanya sesi ini): ${ADMIN_PASSWORD}`);
+}
 const BCRYPT_ROUNDS = 10; // [PATCH-3] Jumlah salt rounds bcrypt
 
 // [PATCH-5] Percayai proxy untuk mendukung HTTPS di Render/Railway
@@ -87,7 +96,7 @@ mongoose.connect(finalUri, { serverSelectionTimeoutMS: 2000 })
  */
 function initializeServer(sessionStore) {
     const sessionOpts = {
-        secret: process.env.SESSION_SECRET || 'legalkilat-super-secret-key-2026',
+        secret: SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         cookie: {
@@ -159,7 +168,7 @@ function initializeServer(sessionStore) {
             const lowerId = identifier.toLowerCase();
             
             // [PATCH-4] Kredensial admin dibaca dari variabel lingkungan, bukan hardcoded
-            const adminPass = process.env.ADMIN_PASSWORD || 'legalkilat2026';
+            const adminPass = ADMIN_PASSWORD;
 
             // Bypass & Seeding Kredensial Admin Default (username: admin / email: admin@legalkilat.id)
             if ((lowerId === 'admin' || lowerId === 'admin@legalkilat.id') && password === adminPass) {

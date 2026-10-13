@@ -57,13 +57,13 @@ Node.js 18+ (diuji di Node 22), Express 4, express-session + connect-mongo, bcry
 git clone https://github.com/seppam/LegalKilat.git
 cd LegalKilat
 npm install
-cp .env.example .env     # opsional; semua nilai punya fallback untuk dev lokal
+cp .env.example .env     # opsional; semua nilai opsional di dev lokal
 npm start                # http://localhost:3000
 ```
 
 Mode fallback (tanpa MongoDB dan tanpa `HF_TOKEN`): sesi disimpan di memori, retrieval hanya sparse, dan **hanya login admin yang tersedia** (registrasi/login pengguna biasa membutuhkan `MONGODB_URI` yang valid, jika tidak API mengembalikan 503).
 
-Login admin untuk demo lokal: username `admin`, sandi dari `ADMIN_PASSWORD` (default dev `legalkilat2026` bila tidak diset). Halaman: `/dashboard/kur.html`, `/dashboard/ekspor.html`, `/dashboard/chat.html`, `/admin/simulator.html`. Pada `NODE_ENV=production`, server menolak start bila `SESSION_SECRET` atau `ADMIN_PASSWORD` kosong.
+Login admin untuk demo lokal: username `admin`, sandi dari `ADMIN_PASSWORD`; bila tidak diset (non-produksi), server membuat sandi acak dan mencetaknya sekali di konsol saat start. Halaman: `/dashboard/kur.html`, `/dashboard/ekspor.html`, `/dashboard/chat.html`, `/admin/simulator.html`. Pada `NODE_ENV=production`, server menolak start bila `SESSION_SECRET` atau `ADMIN_PASSWORD` kosong.
 
 ## Pengujian
 
